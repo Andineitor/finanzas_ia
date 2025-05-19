@@ -8,5 +8,5 @@ public interface UsuarioService {
 	Usuario register(UsuarioDto request);
     Usuario login(UsuarioDto request);
     
-    Usuario getCurrentAuthenticatedUser();
+    Usuario findByUsername(String username);
 }

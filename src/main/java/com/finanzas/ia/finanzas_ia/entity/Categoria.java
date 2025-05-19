@@ -1,7 +1,9 @@
 package com.finanzas.ia.finanzas_ia.entity;
 
 import java.util.Date;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,12 +25,11 @@ public class Categoria {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 	
-	private String nombree;
+	private String nombre;
 	
 	private String descripcion;
-	private Integer ingreso;
-	private Date fecha;
 
-	
+	@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+    private List<Transaccion> transacciones;
 
 }

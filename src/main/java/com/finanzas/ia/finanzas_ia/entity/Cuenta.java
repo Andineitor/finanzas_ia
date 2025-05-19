@@ -1,7 +1,11 @@
 package com.finanzas.ia.finanzas_ia.entity;
 
 import java.util.Date;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,9 +34,12 @@ public class Cuenta {
 	
 	
 	@OneToOne
+	@JsonIgnore
 	@JoinColumn(name = "user_id", nullable = false)
 	private Usuario usuario;
 
-	
+	@JsonIgnore
+	@OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL)
+    private List<Transaccion> transacciones;
 
 }

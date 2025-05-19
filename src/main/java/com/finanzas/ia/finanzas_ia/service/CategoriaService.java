@@ -9,7 +9,8 @@ import com.finanzas.ia.finanzas_ia.entity.Categoria;
 
 @Service
 public interface CategoriaService {
-	
+    List<Categoria> listarCategorias();
+
 
 
 }

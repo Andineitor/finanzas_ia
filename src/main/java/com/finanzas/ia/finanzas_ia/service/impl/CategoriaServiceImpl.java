@@ -22,6 +22,14 @@ import lombok.RequiredArgsConstructor;
 public class CategoriaServiceImpl implements CategoriaService{
 
 
+	private final CategoriaRepository categoriaRepo;
+
+	@Override
+	public List<Categoria> listarCategorias() {
+	    return categoriaRepo.findAll();
+	}
+
+
 	
 
 }

@@ -16,5 +16,6 @@ import jakarta.transaction.Transactional;
 @Repository
 public interface CategoriaRepository extends JpaRepository<Categoria, Integer>{
 
+	Optional<Categoria> findByNombre(String nombre);
 
 }

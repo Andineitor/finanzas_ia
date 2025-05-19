@@ -7,10 +7,8 @@ import com.finanzas.ia.finanzas_ia.entity.Cuenta;
 
 public interface CuentaService {
 	
-	//dto por que recibe credenciales
-	Cuenta registro(CuentaDto request);
-	
-	
-	Optional<Cuenta> obtenerCuentaDelUsuario();
+	Cuenta registroParaUsuario(CuentaDto request, String username);
+    Optional<Cuenta> obtenerCuentaDelUsuario(String username);
+
 	
 }

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro - Finanzas Visual</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SB Admin 2 CSS -->
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-primary">
+
+<div class="container">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-5">
+                    <div class="text-center">
+                        <h1 class="h4 text-gray-900 mb-4">Crea tu cuenta</h1>
+                    </div>
+
+                    <form class="user" action="/register-user" method="post">
+                        <div class="form-group row">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <input type="text" class="form-control form-control-user" id="nombre" name="nombre" placeholder="Nombre" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control form-control-user" id="apellido" name="apellido" placeholder="Apellido" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="number" class="form-control form-control-user" id="edad" name="edad" placeholder="Edad" required>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="email" class="form-control form-control-user" id="email" name="email" placeholder="Correo Electrónico" required>
+                        </div>
+
+						<div class="form-group">
+						    <label for="sexo" class="form-label">Sexo</label>
+						    <select class="form-control form-control-user" id="sexo" name="sexo" required>
+						        <option value="Masculino">Masculino</option>
+						        <option value="Femenino">Femenino</option>
+						    </select>
+						</div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control form-control-user" id="username" name="username" placeholder="Nombre de Usuario" required>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Contraseña" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                            Registrarse
+                        </button>
+
+                        <div th:if="${error}" class="mt-3 alert alert-danger">
+                            <span th:text="${error}"></span>
+                        </div>
+                    </form>
+
+                    <hr>
+                    <div class="text-center">
+                        <a class="small" href="/login">¿Ya tienes cuenta? Inicia sesión</a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- Scripts SB Admin 2 -->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/js/sb-admin-2.min.js"></script>
+</body>
+</html>

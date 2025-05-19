@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -26,8 +27,17 @@ public class Transaccion {
 	private Date fecha;
 	private Boolean transaccionfFamiliar;
 	
+	private String tipo;
+	@ManyToOne
+    @JoinColumn(name = "cuenta_id")
+    private Cuenta cuenta;
 
-	
-	
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
 
 }

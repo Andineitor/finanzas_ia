@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Finanzas Visual</title>
+
+    <!-- SB Admin 2 styles -->
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Google Fonts (opcional pero recomendado por SB Admin 2) -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700" rel="stylesheet">
+</head>
+<body class="bg-gradient-primary">
+
+<div class="container">
+
+    <!-- Fila centrada -->
+    <div class="row justify-content-center">
+
+        <div class="col-xl-6 col-lg-6 col-md-9">
+
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Contenido del login -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="p-5">
+								
+                                <div class="text-center">
+									<img src="/img/hormiga.png" class="mb-4" style="width: 80px;" alt="Hormiga Financiera">
+                                    <h1 class="h4 text-gray-900 mb-2">Hormiga Financiera</h1>
+                                    <p class="mb-4">Controla tus gastos hormiga. Mejora tus finanzas.</p>
+                                </div>
+                                <form class="user" th:action="@{/login}" method="post">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-user"
+                                               id="username" name="username"
+                                               placeholder="Nombre de usuario" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control form-control-user"
+                                               id="password" name="password"
+                                               placeholder="Contraseña" required>
+                                    </div>
+                                    <div th:if="${param.error}" class="alert alert-danger text-center">
+                                        Nombre de usuario o contraseña inválidos
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-user btn-block">
+                                        Iniciar Sesión
+                                    </button>
+
+                                </form>
+                                <hr>
+                                <div class="text-center">
+                                    <a class="small" th:href="@{/register-user}">¿No tienes cuenta? Regístrate aquí</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Scripts SB Admin 2 -->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/js/sb-admin-2.min.js"></script>
+
+</body>
+</html>

@@ -15,33 +15,32 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CuentaServiceImpl implements CuentaService{
-	
-	private final CuentaRepositoy cuentaRepo;
-	private final UsuarioService usuarioServ;
-	
-	
-	@Override
-	public Cuenta registro(CuentaDto request) {
-		Usuario usuario = usuarioServ.getCurrentAuthenticatedUser();
-		if (cuentaRepo.existsByUsuario(usuario)) {
+public class CuentaServiceImpl implements CuentaService {
+
+    private final CuentaRepositoy cuentaRepo;
+    private final UsuarioService usuarioServ;
+
+    @Override
+    public Cuenta registroParaUsuario(CuentaDto request, String username) {
+        Usuario usuario = usuarioServ.findByUsername(username);
+
+        if (cuentaRepo.existsByUsuario(usuario)) {
             throw new RuntimeException("El usuario ya tiene una cuenta asociada.");
         }
-		Cuenta cuenta = new Cuenta();
-	    cuenta.setNombre(request.getNombre());
-	    cuenta.setDescripcion(request.getDescripcion());
-	    cuenta.setIngreso(request.getIngreso());
-	    cuenta.setFecha(request.getFecha());
-	    cuenta.setUsuario(usuario);
-	    return cuentaRepo.save(cuenta);
-	}
 
+        Cuenta cuenta = new Cuenta();
+        cuenta.setNombre(request.getNombre());
+        cuenta.setDescripcion(request.getDescripcion());
+        cuenta.setIngreso(request.getIngreso());
+        cuenta.setFecha(request.getFecha());
+        cuenta.setUsuario(usuario);
 
-	@Override
-	public Optional<Cuenta> obtenerCuentaDelUsuario() {
-	    Usuario usuario = usuarioServ.getCurrentAuthenticatedUser();
-	    return cuentaRepo.findByUsuario(usuario);
-	}
+        return cuentaRepo.save(cuenta);
+    }
 
-	
+    @Override
+    public Optional<Cuenta> obtenerCuentaDelUsuario(String username) {
+        Usuario usuario = usuarioServ.findByUsername(username);
+        return cuentaRepo.findByUsuario(usuario);
+    }
 }

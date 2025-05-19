@@ -2,7 +2,6 @@ package com.finanzas.ia.finanzas_ia.service.impl;
 
 
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +28,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 		Usuario user = new Usuario();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setNombre(request.getNombre());
+        user.setApellido(request.getApellido());
+        user.setEdad(request.getEdad());
+        user.setEmail(request.getEmail());
+        user.setSexo(request.getSexo());
+        user.setRole("USER"); 
         return userRepo.save(user);
 	}
 
@@ -43,12 +48,10 @@ public class UsuarioServiceImpl implements UsuarioService {
         return user;
     }
 
-	@Override
-	public Usuario getCurrentAuthenticatedUser() {
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepo.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-    }
+	public Usuario findByUsername(String username) {
+	    return userRepo.findByUsername(username)
+	            .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+	}
 	
 	
 	

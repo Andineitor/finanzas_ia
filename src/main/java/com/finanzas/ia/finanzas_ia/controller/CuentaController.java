@@ -1,74 +1,67 @@
 package com.finanzas.ia.finanzas_ia.controller;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.security.Principal;
 import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import com.finanzas.ia.finanzas_ia.dto.CuentaDto;
 import com.finanzas.ia.finanzas_ia.entity.Cuenta;
+import com.finanzas.ia.finanzas_ia.entity.Usuario;
+import com.finanzas.ia.finanzas_ia.service.CategoriaService;
 import com.finanzas.ia.finanzas_ia.service.CuentaService;
+import com.finanzas.ia.finanzas_ia.service.UsuarioService;
 
 import lombok.RequiredArgsConstructor;
 
-
-@RestController
-@RequestMapping("/api/cuentas")
+@Controller
+@RequestMapping("/cuenta")
 @RequiredArgsConstructor
 public class CuentaController {
 
     private final CuentaService cuentaService;
+    private final CategoriaService categoriaService;
+    private final UsuarioService usuarioService;// ← Asegúrate de tener esto
 
+    /**
+     * Muestra el dashboard con la cuenta del usuario, o el formulario si no tiene cuenta.
+     */
+    @GetMapping("/dashboard")
+    public String mostrarDashboard(Model model, Principal principal) {
+        model.addAttribute("nombreUsuario", principal.getName());
 
-    @PostMapping("/register")
-    public ResponseEntity<?> crearCuenta(@RequestBody CuentaDto cuentaDTO) {
+        Optional<Cuenta> cuentaOpt = cuentaService.obtenerCuentaDelUsuario(principal.getName());
+        cuentaOpt.ifPresent(c -> {
+            model.addAttribute("cuenta", c);
+            model.addAttribute("transacciones", c.getTransacciones()); // si no lo haces por query
+        });
+        
+        Usuario usuario = usuarioService.findByUsername(principal.getName());
+        model.addAttribute("usuario", usuario); 
+
+        model.addAttribute("categorias", categoriaService.listarCategorias()); 
+
+        return "count";
+    }
+
+    /**
+     * Procesa la creación de la cuenta desde el formulario.
+     */
+    @PostMapping("/registrar")
+    public String crearCuentaDesdeFormulario(@ModelAttribute CuentaDto cuentaDTO, Principal principal, Model model) {
         try {
-            cuentaService.registro(cuentaDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Cuenta creada exitosamente.");
+            cuentaService.registroParaUsuario(cuentaDTO, principal.getName());
+            return "redirect:/cuenta/dashboard";
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            model.addAttribute("nombreUsuario", principal.getName());
+            model.addAttribute("error", e.getMessage());
+            return "count";
         }
     }
     
     
-    @GetMapping("/mi-cuenta")
-    public ResponseEntity<Map<String, Object>> obtenerMiCuenta() {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            Optional<Cuenta> cuentaOpt = cuentaService.obtenerCuentaDelUsuario();
-
-            if (cuentaOpt.isPresent()) {
-                Cuenta cuenta = cuentaOpt.get();
-                CuentaDto dto = new CuentaDto(
-                    cuenta.getId(),
-                    cuenta.getNombre(),
-                    cuenta.getDescripcion(),
-                    cuenta.getIngreso(),
-                    cuenta.getFecha()
-                );
-                response.put("status", "ok");
-                response.put("data", dto);
-                return ResponseEntity.ok(response);
-            } else {
-                response.put("status", "error");
-                response.put("message", "No se encontró una cuenta para el usuario.");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-            }
-        } catch (Exception e) {
-            response.put("status", "error");
-            response.put("message", " Error al obtener la cuenta: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
-
-
+    
 
 }

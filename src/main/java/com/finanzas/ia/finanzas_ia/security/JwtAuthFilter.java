@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.finanzas.ia.finanzas_ia.util.JwtUtil;
+import com.finanzas.ia.finanzas_ia.util.PublicRoutes;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,6 +29,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
+    	
+    	String path = request.getServletPath();
+
+        // 🚫 Si es una ruta pública, sigue sin validar token
+        if (PublicRoutes.isPublic(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         final String authHeader = request.getHeader("Authorization");
 

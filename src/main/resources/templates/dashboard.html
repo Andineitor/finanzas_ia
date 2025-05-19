@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Finanzas Visual</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- SB Admin 2 CSS -->
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div th:replace="components/sidebar :: sidebar"></div>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <div th:replace="components/header :: header"></div>
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <h1 class="h3 mb-4 text-gray-800">Bienvenido, <span th:text="${usuario.nombre}">Usuario</span></h1>
+
+                <div class="row">
+
+                    <!-- Pie Chart -->
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Distribución de Balance</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-pie pt-4">
+                                    <canvas id="balancePieChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bar Chart -->
+                    <div class="col-xl-6 col-lg-6">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-success">Gastos por Categoría</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-bar">
+                                    <canvas id="gastoBarChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <div th:replace="components/footer :: footer"></div>
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scripts -->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/vendor/chart.js/Chart.min.js"></script>
+<script src="/js/sb-admin-2.min.js"></script>
+<script type="module" src="/js/dashboard.js" defer></script>
+
+<!-- Thymeleaf data script -->
+<script th:inline="javascript">
+    let categoriasData = /*[[${gastoCategorias.keySet()}]]*/ [];
+    let gastosData = /*[[${gastoCategorias.values()}]]*/ [];
+    let ingresoData = /*[[${cuenta.ingreso}]]*/ 0;
+    let gastoTotalData = /*[[${totalGastos}]]*/ 0;
+    let fechas = /*[[${fechas}]]*/ [];
+    let ingresosPorDia = /*[[${ingresosPorDia}]]*/ [];
+    let gastosPorDia = /*[[${gastosPorDia}]]*/ [];
+</script>
+
+</body>
+</html>
