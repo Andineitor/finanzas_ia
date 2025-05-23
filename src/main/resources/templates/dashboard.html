@@ -5,35 +5,90 @@
     <title>Dashboard - Finanzas Visual</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- SB Admin 2 CSS -->
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
-
 </head>
 <body id="page-top">
 
 <!-- Page Wrapper -->
 <div id="wrapper">
 
-    <!-- Sidebar -->
-    <div th:replace="components/sidebar :: sidebar"></div>
+	<!-- Sidebar -->
+	        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+	            <!-- Sidebar - Brand -->
+	            <a class="sidebar-brand d-flex align-items-center justify-content-center" th:href="@{/dashboard}">
+					<div class="sidebar-brand-icon">
+					    <img src="/img/hormiga.png" alt="Logo Finanzas" style="height: 40px;">
+					</div>
+	                <div class="sidebar-brand-text mx-3">Finanzas Hormigas <sup>IA</sup></div>
+	            </a>
+
+	            <!-- Divider -->
+	            <hr class="sidebar-divider my-0">
+
+	            <!-- Nav Item - Dashboard -->
+				<li class="nav-item active">
+				   <a class="nav-link" th:href="@{/dashboard}">
+				       <i class="fas fa-fw fa-tachometer-alt"></i>
+				      <span>Dashboard</span>
+				   </a>
+				 </li>
+
+	            <!-- Divider -->
+	            <hr class="sidebar-divider">
+
+	            <!-- Heading -->
+	            <div class="sidebar-heading">
+	                Cuenta
+	            </div>
+
+				<li class="nav-item">
+				   <a class="nav-link" href="/cuenta/dashboard">
+				     <i class="fas fa-fw fa-table"></i>
+				     <span>Transacciones</span>
+				   </a>
+				 </li>
+	            <!-- Divider -->
+	            <hr class="sidebar-divider">
+
+	            <!-- Heading -->
+	            <div class="sidebar-heading">
+	                Consejos
+	            </div>
+
+	          
+	            <!-- Nav Item - Charts -->
+	            <li class="nav-item">
+	                <a class="nav-link" href="/tips/dashboard">
+	                    <i class="fas fa-fw fa-chart-area"></i>
+	                <span>?</span></a>
+	            </li>
+
+	        
+	            <!-- Divider -->
+	            <hr class="sidebar-divider d-none d-md-block">
+
+	            <!-- Sidebar Toggler (Sidebar) -->
+	            <div class="text-center d-none d-md-inline">
+	                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+	            </div>
+
+	        </ul>
+	        <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
-
-        <!-- Main Content -->
         <div id="content">
 
-            <!-- Topbar -->
+            <!-- Header (modularizado) -->
             <div th:replace="components/header :: header"></div>
 
-            <!-- Begin Page Content -->
+            <!-- Main Content -->
             <div class="container-fluid">
-
                 <h1 class="h3 mb-4 text-gray-800">Bienvenido, <span th:text="${usuario.nombre}">Usuario</span></h1>
 
                 <div class="row">
-
                     <!-- Pie Chart -->
                     <div class="col-xl-6 col-lg-6">
                         <div class="card shadow mb-4">
@@ -61,30 +116,21 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="row">
-
-
+                    <!-- Aquí puedes seguir añadiendo más widgets o estadísticas -->
                 </div>
-
             </div>
-            <!-- /.container-fluid -->
-
         </div>
-        <!-- End of Main Content -->
 
-        <!-- Footer -->
+        <!-- Footer (modularizado) -->
         <div th:replace="components/footer :: footer"></div>
 
     </div>
-    <!-- End of Content Wrapper -->
-
 </div>
-<!-- End of Page Wrapper -->
 
-<!-- Scripts -->
+<!-- JS Scripts -->
 <script src="/vendor/jquery/jquery.min.js"></script>
 <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -92,7 +138,7 @@
 <script src="/js/sb-admin-2.min.js"></script>
 <script type="module" src="/js/dashboard.js" defer></script>
 
-<!-- Thymeleaf data script -->
+<!-- Thymeleaf JS Data -->
 <script th:inline="javascript">
     let categoriasData = /*[[${gastoCategorias.keySet()}]]*/ [];
     let gastosData = /*[[${gastoCategorias.values()}]]*/ [];
@@ -102,6 +148,5 @@
     let ingresosPorDia = /*[[${ingresosPorDia}]]*/ [];
     let gastosPorDia = /*[[${gastosPorDia}]]*/ [];
 </script>
-
 </body>
 </html>

@@ -35,7 +35,7 @@ public class CuentaController {
         Optional<Cuenta> cuentaOpt = cuentaService.obtenerCuentaDelUsuario(principal.getName());
         cuentaOpt.ifPresent(c -> {
             model.addAttribute("cuenta", c);
-            model.addAttribute("transacciones", c.getTransacciones()); // si no lo haces por query
+            model.addAttribute("transacciones", c.getTransacciones()); 
         });
         
         Usuario usuario = usuarioService.findByUsername(principal.getName());

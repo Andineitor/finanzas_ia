@@ -29,7 +29,6 @@ public class TransaccionServiceImple implements TransaccionService {
     @Autowired
     private final CategoriaRepository categoriaRepo;
 
-    @Autowired
     public TransaccionServiceImple(CuentaRepositoy cuentaRepo,
                                     TransaccionRepository transRepo,
                                     CuentaService cuentaServ) {

@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.OrderBy;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,7 @@ public class Cuenta {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "cuenta", cascade = CascadeType.ALL)
+	@OrderBy("fecha DESC")
     private List<Transaccion> transacciones;
 
 }
