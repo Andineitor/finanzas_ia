@@ -1,29 +1,52 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.1.4/css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Dashboard - Finanzas Visual</title>
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <style>
-        .ingreso-display {
-            font-size: 2.8rem;
-            font-weight: 800;
-            color: #1cc88a;
-        }
-    </style>
-</head>
+	    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+	    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+		<style>
+		       .ingreso-display {
+		           font-size: 2.8rem;
+		           font-weight: 800;
+		           color: #1cc88a;
+		       }
+		   </style>
+		   <style>
+		       th.sorting:after,
+		       th.sorting_asc:after,
+		       th.sorting_desc:after {
+		           font-family: "Font Awesome 5 Free";
+		           font-weight: 900;
+		           padding-left: 10px;
+		       }
+
+		       th.sorting:after {
+		           content: "\f0dc"; /* ícono de barras (sort) */
+		       }
+
+		       th.sorting_asc:after {
+		           content: "\f062"; /* flecha hacia arriba */
+		           color: green;
+		       }
+
+		       th.sorting_desc:after {
+		           content: "\f063"; /* flecha hacia abajo */
+		           color: red;
+		       }
+		   </style>
+
+	</head>
+	<body id="page-top">
 <body id="page-top">
 
 <!-- Page Wrapper -->
 <div id="wrapper">
     
 	<!-- Sidebar -->
-		        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+	<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
 		            <!-- Sidebar - Brand -->
 		            <a class="sidebar-brand d-flex align-items-center justify-content-center" th:href="@{/dashboard}">
@@ -69,7 +92,7 @@
 		          
 		            <!-- Nav Item - Charts -->
 		            <li class="nav-item">
-		                <a class="nav-link" href="/tips/dashboard">
+		                <a class="nav-link" href="/tip/dashboard">
 		                    <i class="fas fa-fw fa-chart-area"></i>
 		                <span>?</span></a>
 		            </li>
@@ -236,19 +259,14 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-<!-- JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.1.4/js/sb-admin-2.min.js"></script>
+
 <!-- jQuery primero (si aún no lo tienes ya cargado) -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <!-- JS Scripts -->
 <script src="/vendor/jquery/jquery.min.js"></script>
 <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
 <script src="/vendor/chart.js/Chart.min.js"></script>
 <script src="/js/sb-admin-2.min.js"></script>
-<script type="module" src="/js/dashboard.js" defer></script>
 
 <!-- DataTables y Bootstrap plugin -->
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>

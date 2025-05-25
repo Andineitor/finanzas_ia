@@ -9,6 +9,8 @@ public interface CuentaService {
 	
 	Cuenta registroParaUsuario(CuentaDto request, String username);
     Optional<Cuenta> obtenerCuentaDelUsuario(String username);
+    void actualizarCuenta(CuentaDto cuenta);
+
 
 	
 }

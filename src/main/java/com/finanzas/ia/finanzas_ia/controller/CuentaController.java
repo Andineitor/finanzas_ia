@@ -61,7 +61,11 @@ public class CuentaController {
         }
     }
     
-    
+    @PostMapping("/actualizar")
+    public String actualizarCuenta(@ModelAttribute CuentaDto cuenta) {
+        cuentaService.actualizarCuenta(cuenta);
+        return "redirect:/cuenta/dashboard";
+    }
     
 
 }

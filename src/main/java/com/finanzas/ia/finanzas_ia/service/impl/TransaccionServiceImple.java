@@ -29,13 +29,15 @@ public class TransaccionServiceImple implements TransaccionService {
     @Autowired
     private final CategoriaRepository categoriaRepo;
 
+    @Autowired 
     public TransaccionServiceImple(CuentaRepositoy cuentaRepo,
                                     TransaccionRepository transRepo,
-                                    CuentaService cuentaServ) {
+                                    CuentaService cuentaServ,
+                                    CategoriaRepository cateRepo) {
         this.cuentaRepo = cuentaRepo;
         this.transRepo = transRepo;
         this.cuentaServ = cuentaServ;
-		this.categoriaRepo = null;
+		this.categoriaRepo = cateRepo;
     }
 	
 	
@@ -51,6 +53,7 @@ public class TransaccionServiceImple implements TransaccionService {
         t.setCantidad(cantidad);
         t.setFecha(new Date());
         t.setTipo("ingreso");
+        t.setUsuario(cuenta.getUsuario());
         t.setTransaccionfFamiliar(false);
         t.setCuenta(cuenta);
 
@@ -69,6 +72,8 @@ public class TransaccionServiceImple implements TransaccionService {
         // ¡positivo! el tipo ahora lo define
         t.setFecha(new Date());
         t.setTipo("gasto");
+        t.setUsuario(cuenta.getUsuario());
+
         t.setTransaccionfFamiliar(false);
         t.setCuenta(cuenta);
         Categoria categoria = categoriaRepo.findById(categoriId)

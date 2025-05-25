@@ -19,8 +19,4 @@ public class CuentaDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date fecha;
 
-	
-
-
-
 }

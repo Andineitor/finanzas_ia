@@ -46,6 +46,18 @@ public class Usuario implements UserDetails{
 	
 	private String sexo;
 	
+	@Column(name = "foto_perfil", columnDefinition = "TEXT")
+    private String fotoPerfilBase64;
+
+    public String getFotoPerfilBase64() {
+        return fotoPerfilBase64;
+    }
+
+    public void setFotoPerfilBase64(String fotoPerfilBase64) {
+        this.fotoPerfilBase64 = fotoPerfilBase64;
+    }
+
+	
     @Column(unique = true)
     private String username;
 
@@ -64,6 +76,8 @@ public class Usuario implements UserDetails{
 		 return Collections.emptyList();
 	}
     
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+	private List<Tip> tips;
     
 	@Override
     public String getPassword() {

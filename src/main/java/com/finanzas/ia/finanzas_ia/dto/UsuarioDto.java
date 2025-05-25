@@ -17,5 +17,6 @@ public class UsuarioDto {
 	private Integer edad;
 	private String email;
 	private String sexo;
+    private String fotoPerfilBase64; // cambia de byte[] a String
     private String role = "USER";
 }

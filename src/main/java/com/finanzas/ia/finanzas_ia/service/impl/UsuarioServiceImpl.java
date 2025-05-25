@@ -2,9 +2,20 @@ package com.finanzas.ia.finanzas_ia.service.impl;
 
 
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Base64;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.finanzas.ia.finanzas_ia.dto.UsuarioDto;
 import com.finanzas.ia.finanzas_ia.entity.Usuario;
@@ -19,6 +30,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	
 	private final UsuarioRepository userRepo;
     private final PasswordEncoder passwordEncoder;
+    private final String UPLOAD_DIR = "uploads/";
 
 	@Override
 	public Usuario register(UsuarioDto request) {
@@ -52,8 +64,33 @@ public class UsuarioServiceImpl implements UsuarioService {
 	    return userRepo.findByUsername(username)
 	            .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 	}
-	
-	
-	
 
-}
+	@Override
+	public void actualizarUsuario(UsuarioDto dto, MultipartFile imagen) throws IOException {
+	    Usuario usuario = userRepo.findById(dto.getId())
+	        .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con id: " + dto.getId()));
+
+	    usuario.setNombre(dto.getNombre());
+	    usuario.setApellido(dto.getApellido());
+	    usuario.setEdad(dto.getEdad());
+	    usuario.setEmail(dto.getEmail());
+	    usuario.setSexo(dto.getSexo());
+	    usuario.setUsername(dto.getUsername());
+
+	    if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+	        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
+	    }
+
+	    if (imagen != null && !imagen.isEmpty()) {
+	        String base64 = Base64.getEncoder().encodeToString(imagen.getBytes());
+	        usuario.setFotoPerfilBase64(base64);
+	    } else if (dto.getFotoPerfilBase64() != null) {
+	        usuario.setFotoPerfilBase64(dto.getFotoPerfilBase64());
+	    } // si no envían imagen ni base64, no cambies nada
+
+	    userRepo.save(usuario);
+	}
+
+		
+	}
+	

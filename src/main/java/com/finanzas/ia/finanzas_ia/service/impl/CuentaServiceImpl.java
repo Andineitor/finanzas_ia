@@ -43,4 +43,17 @@ public class CuentaServiceImpl implements CuentaService {
         Usuario usuario = usuarioServ.findByUsername(username);
         return cuentaRepo.findByUsuario(usuario);
     }
+
+	@Override
+	public void actualizarCuenta(CuentaDto cuentaDto) {
+		Cuenta cuenta = cuentaRepo.findById(cuentaDto.getId())
+                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
+		cuenta.setNombre(cuentaDto.getNombre());
+		cuenta.setDescripcion(cuentaDto.getDescripcion());
+		cuenta.setIngreso(cuentaDto.getIngreso());
+		cuenta.setFecha(cuentaDto.getFecha());
+
+		cuentaRepo.save(cuenta);
+		
+	}
 }

@@ -1,7 +1,7 @@
-<!-- templates/components/header.html -->
+<!-- header.html -->
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" th:fragment="header">
 
-    <!-- Sidebar Toggle (Topbar) -->
+    <!-- Sidebar Toggle (Topbar) SOLO UNO -->
     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
         <i class="fa fa-bars"></i>
     </button>
@@ -9,14 +9,32 @@
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 
-        <!-- User Information -->
+        <!-- User Info -->
         <li class="nav-item dropdown no-arrow">
-            <a class="nav-link dropdown-toggle"  id="userDropdown" role="button"
+            <a class="nav-link dropdown-toggle d-flex align-items-center" id="userDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${usuario.nombre}">Usuario</span>
-                <img class="img-profile rounded-circle" src="/img/hormiga.png" alt="Perfil">
+
+                <span 
+                    class="mr-3 font-weight-bold text-gray-800" 
+                    style="font-size: 1rem; letter-spacing: 0.5px;" 
+                    th:text="${usuario.nombre}">
+                    Usuario
+                </span>
+
+                <img th:if="${usuario.fotoPerfilBase64 != null}"
+                     th:src="'data:image/jpeg;base64,' + ${usuario.fotoPerfilBase64}"
+                     alt="Foto de perfil"
+                     class="img-profile rounded-circle border border-primary shadow"
+                     style="width: 55px; height: 55px; object-fit: cover;" />
+
+                <img th:if="${usuario.fotoPerfilBase64 == null}"
+                     src="/img/default.png"
+                     alt="Foto de perfil por defecto"
+                     class="img-profile rounded-circle border border-secondary shadow"
+                     style="width: 55px; height: 55px; object-fit: cover;" />
             </a>
-            <!-- Dropdown - User Information -->
+
+            <!-- Dropdown - User Info -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                  aria-labelledby="userDropdown">
                 <a class="dropdown-item" th:href="@{/user/profile}">

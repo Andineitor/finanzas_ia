@@ -41,12 +41,15 @@
                         </div>
 
 						<div class="form-group">
-						    <label for="sexo" class="form-label">Sexo</label>
-						    <select class="form-control form-control-user" id="sexo" name="sexo" required>
-						        <option value="Masculino">Masculino</option>
-						        <option value="Femenino">Femenino</option>
-						    </select>
+						    <div class="input-group rounded-pill">
+						        <select class="form-control rounded-pill" id="sexo" name="sexo" required>
+						            <option value="" disabled selected>Seleccione sexo</option>
+						            <option value="Masculino">Masculino</option>
+						            <option value="Femenino">Femenino</option>
+						        </select>
+						    </div>
 						</div>
+
 
                         <div class="form-group">
                             <input type="text" class="form-control form-control-user" id="username" name="username" placeholder="Nombre de Usuario" required>
