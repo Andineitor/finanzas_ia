@@ -88,6 +88,52 @@
             <div class="container-fluid">
                 <h1 class="h3 mb-4 text-gray-800">Bienvenido, <span th:text="${usuario.nombre}">Usuario</span></h1>
 
+                <!-- Carrusel de categorías con gasto > $40 -->
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Carrusel si hay categorías -->
+                        <div class="card shadow mb-4" th:if="${categoriasMayores40Chunks != null and !categoriasMayores40Chunks.isEmpty()}">
+                            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                                <h6 class="m-0 font-weight-bold text-primary">Categorías con Gasto Alto (&gt; $40)</h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="carouselCategorias" class="carousel slide" data-ride="carousel">
+                                    <div class="carousel-inner">
+                                        <div th:each="chunk, chunkStat : ${categoriasMayores40Chunks}"
+                                             th:class="${chunkStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                                            <div class="row">
+                                                <div class="col-md-3 mb-3" th:each="cat : ${chunk}">
+                                                    <div class="card border-left-danger shadow h-100 py-2">
+                                                        <div class="card-body">
+                                                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1"
+                                                                 th:text="${cat.key}">Categoría</div>
+                                                            <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                                                 th:text="'$' + ${cat.value}">$0</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a class="carousel-control-prev" href="#carouselCategorias" role="button" data-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carouselCategorias" role="button" data-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mensaje si NO hay categorías -->
+                        <div class="card shadow mb-4" th:unless="${categoriasMayores40Chunks != null and !categoriasMayores40Chunks.isEmpty()}">
+                            <div class="card-body text-center text-gray-600">
+                                <p class="mb-0">No hay categorías con gastos superiores a $40 por ahora.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <!-- Pie Chart -->
                     <div class="col-xl-6 col-lg-6">
