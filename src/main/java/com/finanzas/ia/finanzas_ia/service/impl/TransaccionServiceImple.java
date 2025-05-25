@@ -1,6 +1,12 @@
 package com.finanzas.ia.finanzas_ia.service.impl;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -105,6 +111,48 @@ public class TransaccionServiceImple implements TransaccionService {
                 Collectors.summingInt(Transaccion::getCantidad) // Sumar las cantidades
             ));
     }
+
+
+    @Override
+    public Map<String, Object> obtenerIngresosYGastosFormateadosPorFecha(Integer usuarioId) {
+        List<Object[]> rawData = transRepo.obtenerIngresosYGastosPorFecha(usuarioId);
+
+        List<String> fechas = new ArrayList<>();
+        List<Integer> ingresosPorDia = new ArrayList<>();
+        List<Integer> gastosPorDia = new ArrayList<>();
+
+        if (rawData != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM");
+
+            for (Object[] fila : rawData) {
+                if (fila[0] != null) {
+                    Date fecha = (Date) fila[0];
+                    LocalDate localDate = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    fechas.add(localDate.format(formatter));
+                } else {
+                    fechas.add("N/A");
+                }
+
+                ingresosPorDia.add(fila[1] != null ? ((Number) fila[1]).intValue() : 0);
+                gastosPorDia.add(fila[2] != null ? ((Number) fila[2]).intValue() : 0);
+            }
+        }
+
+        Map<String, Object> resultado = new HashMap<>();
+        resultado.put("fechas", fechas);
+        resultado.put("ingresosPorDia", ingresosPorDia);
+        resultado.put("gastosPorDia", gastosPorDia);
+
+        return resultado;
+    }
+
+
+    @Override
+    public List<Object[]> obtenerIngresosYGastosPorFecha(Integer usuarioId) {
+        return transRepo.obtenerIngresosYGastosPorFecha(usuarioId);
+    }
+
+
 
 
 }

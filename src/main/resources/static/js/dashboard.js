@@ -7,156 +7,145 @@ document.addEventListener("DOMContentLoaded", () => {
   const ingresosData = ingresosPorDia || [];
   const gastosDataLine = gastosPorDia || [];
 
-  // Gráfico pastel ingresos vs egresos
+  // Gráfico DONUT ingresos vs egresos
   new Chart(document.getElementById("balancePieChart"), {
-    type: 'pie',
+    type: 'doughnut',
     data: {
       labels: ['Ingreso', 'Egreso'],
       datasets: [{
         data: [ingreso, gastoTotal],
-        backgroundColor: ['#4CAF50', '#E74C3C'],
+        backgroundColor: ['#1cc88a', '#e74a3b'],
         borderColor: '#fff',
         borderWidth: 2,
         hoverOffset: 30,
+        hoverBackgroundColor: ['#17a673', '#be2617'],
       }]
     },
     options: {
       responsive: true,
+      cutoutPercentage: 75,
       plugins: {
-        legend: { position: 'bottom', labels: { font: { size: 14, weight: '600' }, color: '#34495e' }},
-        title: {
-          display: true,
-          text: 'Balance General: Ingreso vs Egreso',
-          font: { size: 20, weight: '700' },
-          color: '#2c3e50',
-          padding: { bottom: 20 }
-        },
+        legend: { display: false },
         tooltip: {
-          backgroundColor: '#2c3e50',
-          titleFont: { weight: 'bold', size: 16 },
-          bodyFont: { size: 14 },
-          padding: 10,
-          cornerRadius: 8
+          enabled: true,
+          callbacks: {
+            label: function(context) {
+              const total = context.dataset.data.reduce((a, b) => a + b, 0);
+              const value = context.raw;
+              const label = context.label;
+              const percentage = ((value / total) * 100).toFixed(1);
+              return `${label}: $${value} (${percentage}%)`;
+            }
+          }
         }
       }
     }
   });
 
+  // Generar colores dinámicos para barras
+  const generarColores = (cantidad) => {
+    const colores = [];
+    for (let i = 0; i < cantidad; i++) {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      colores.push(`rgba(${r}, ${g}, ${b}, 0.7)`);
+    }
+    return colores;
+  };
+
   // Gráfico barras horizontal gastos por categoría
   if(categorias.length > 0 && gastos.length > 0) {
     new Chart(document.getElementById("gastoBarChart"), {
-      type: 'bar',
+      type: 'horizontalBar',
       data: {
         labels: categorias,
         datasets: [{
-          label: 'Gastos por Categoría',
+          label: 'Egreso total',
           data: gastos,
-          backgroundColor: '#3498db',
+          backgroundColor: generarColores(categorias.length),
           borderRadius: 6,
           maxBarThickness: 40
         }]
       },
       options: {
-        indexAxis: 'y',
         responsive: true,
-        plugins: {
-          legend: { display: false },
-          title: {
-            display: true,
-            text: 'Gastos por Categoría (Barra Horizontal)',
-            font: { size: 18, weight: '700' }
-          },
-          tooltip: {
-            backgroundColor: '#2c3e50',
-            titleFont: { weight: 'bold', size: 14 },
-            bodyFont: { size: 14 },
-            cornerRadius: 6,
-            padding: 8
-          }
+        legend: { display: false },
+        title: {
+          display: false,
+          text: 'Egreso total',
+          fontSize: 18
         },
         scales: {
-          x: {
-            beginAtZero: true,
-            grid: { color: '#ecf0f1' },
-            ticks: { font: { size: 13 }, color: '#34495e' }
-          },
-          y: {
-            grid: { display: false },
-            ticks: { font: { size: 14 }, color: '#34495e' }
-          }
+          xAxes: [{
+            ticks: { beginAtZero: true }
+          }],
+          yAxes: [{
+            barPercentage: 0.5
+          }]
         }
       }
     });
   }
 
   // Gráfico lineal evolución ingresos y egresos
-  if(fechasData.length > 0) {
-    new Chart(document.getElementById("lineChart"), {
+  if(fechas.length > 0) {
+	// Formateo de fechas para que sean más amigables visualmente
+	 fechas = fechas.map(f => {
+	   let date = new Date(f);
+	   let dia = date.getDate().toString().padStart(2, '0');
+	   let mes = date.toLocaleString('es-ES', { month: 'long' });
+	   return `${mes.charAt(0).toUpperCase() + mes.slice(1)}-${dia}`;
+	 });
+    const ctx = document.getElementById("myAreaChart").getContext("2d");
+
+    new Chart(ctx, {
       type: 'line',
       data: {
-        labels: fechasData,
+        labels: fechas,
         datasets: [
           {
-            label: 'Ingresos',
-            data: ingresosData,
-            borderColor: '#4CAF50',
-            backgroundColor: 'rgba(76, 175, 80, 0.2)',
+            label: "Ingresos",
+            data: ingresosPorDia,
+            backgroundColor: "rgba(78, 115, 223, 0.05)",
+            borderColor: "rgba(78, 115, 223, 1)",
             fill: true,
-            tension: 0.4,
-            pointRadius: 5,
-            pointHoverRadius: 7,
-            borderWidth: 3,
+            tension: 0.3
           },
           {
-            label: 'Egresos',
-            data: gastosDataLine,
-            borderColor: '#E74C3C',
-            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+            label: "Gastos",
+            data: gastosPorDia,
+            backgroundColor: "rgba(231, 74, 59, 0.05)",
+            borderColor: "rgba(231, 74, 59, 1)",
             fill: true,
-            tension: 0.4,
-            pointRadius: 5,
-            pointHoverRadius: 7,
-            borderWidth: 3,
+            tension: 0.3
           }
         ]
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'top', labels: { font: { size: 14, weight: '600' }, color: '#34495e' }},
-          tooltip: {
-            backgroundColor: '#2c3e50',
-            titleFont: { weight: 'bold', size: 16 },
-            bodyFont: { size: 14 },
-            padding: 10,
-            cornerRadius: 8
-          },
-          title: {
-            display: true,
-            text: 'Evolución de Ingresos y Egresos',
-            font: { size: 20, weight: '700' },
-            color: '#2c3e50',
-            padding: { bottom: 20 }
+          legend: {
+            position: 'top',
           }
         },
         scales: {
-          y: {
-            beginAtZero: true,
-            ticks: { font: { size: 14, weight: '600' }, color: '#34495e' },
-            grid: { color: '#ecf0f1', borderColor: '#bdc3c7' }
-          },
           x: {
-            ticks: { font: { size: 14, weight: '600' }, color: '#34495e' },
-            grid: { display: false }
+            title: {
+              display: true,
+              text: 'Fecha'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Monto ($)'
+            },
+            beginAtZero: true
           }
         }
       }
     });
   }
-  console.log({
-    fechasData,
-    ingresosData,
-    gastosDataLine
-  });
-
 });

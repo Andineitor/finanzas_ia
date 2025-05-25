@@ -19,5 +19,16 @@ public interface TransaccionRepository extends JpaRepository<Transaccion, Intege
 	           "WHERE t.usuario.id = :usuarioId AND t.tipo = 'gasto' " +
 	           "GROUP BY t.categoria.nombre")
 	    List<Object[]> sumaGastosPorCategoria(@Param("usuarioId") Integer usuarioId);
+	    
+	    
+	    @Query("SELECT t.fecha, " +
+	    	       "SUM(CASE WHEN t.tipo = 'ingreso' THEN t.cantidad ELSE 0 END), " +
+	    	       "SUM(CASE WHEN t.tipo = 'gasto' THEN t.cantidad ELSE 0 END) " +
+	    	       "FROM Transaccion t " +
+	    	       "WHERE t.usuario.id = :usuarioId " +
+	    	       "GROUP BY t.fecha " +
+	    	       "ORDER BY t.fecha ASC")
+	    	List<Object[]> obtenerIngresosYGastosPorFecha(@Param("usuarioId") Integer usuarioId);
+
 
 }

@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import org.slf4j.Logger;
@@ -59,7 +61,6 @@ public class AuthController {
 	public String mostrarDashboard(Model model, Principal principal) {
 	    String username = principal.getName();
 
-	    // Obtener la cuenta del usuario (o crear una vacía si no hay)
 	    Optional<Cuenta> cuentaOpt = cuentaService.obtenerCuentaDelUsuario(username);
 	    Cuenta cuenta = cuentaOpt.orElseGet(() -> {
 	        Cuenta c = new Cuenta();
@@ -68,33 +69,75 @@ public class AuthController {
 	    });
 	    model.addAttribute("cuenta", cuenta);
 
-	    // Calcular total de gastos, asegurando que nunca sea null
 	    Integer totalGastos = cuentaOpt.isPresent()
 	            ? transServ.calcularTotalGastos(cuenta)
 	            : 0;
 	    model.addAttribute("totalGastos", totalGastos);
 
-	    // Gastos por categoría, vacíos si no hay cuenta
 	    Map<String, Integer> gastoCategorias = cuentaOpt.isPresent()
 	            ? transServ.obtenerGastosPorCategoria(cuenta)
 	            : new HashMap<>();
 	    model.addAttribute("gastoCategorias", gastoCategorias);
 
-		// Filtrar categorías con gasto mayor a 40 para las tarjetas
-		List<Map.Entry<String, Integer>> categoriasMayores40 = gastoCategorias.entrySet()
-				.stream()
-				.filter(e -> e.getValue() > 40)
-				.sorted((a, b) -> b.getValue() - a.getValue())
-				.toList();
-		model.addAttribute("categoriasMayores40", categoriasMayores40);
-		model.addAttribute("categoriasMayores40Chunks", partirLista(categoriasMayores40, 4));
+	    List<Map.Entry<String, Integer>> categoriasMayores40 = gastoCategorias.entrySet()
+	            .stream()
+	            .filter(e -> e.getValue() > 40)
+	            .sorted((a, b) -> b.getValue() - a.getValue())
+	            .toList();
+	    model.addAttribute("categoriasMayores40", categoriasMayores40);
+	    model.addAttribute("categoriasMayores40Chunks", partirLista(categoriasMayores40, 4));
 
-	    // Usuario
 	    Usuario usuario = userService.findByUsername(username);
 	    model.addAttribute("usuario", usuario);
 
+	    Integer usuarioId = usuario.getId();
+
+	    List<Object[]> ingresosYGastos = transServ.obtenerIngresosYGastosPorFecha(usuarioId);
+
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM-dd", new Locale("es", "ES"));
+
+	    List<String> fechas = new ArrayList<>();
+	    List<Integer> ingresosPorDia = new ArrayList<>();
+	    List<Integer> gastosPorDia = new ArrayList<>();
+
+	    for (Object[] row : ingresosYGastos) {
+	        LocalDate fecha = null;
+
+	        if (row[0] instanceof java.sql.Date) {
+	            fecha = ((java.sql.Date) row[0]).toLocalDate();
+	        } else if (row[0] instanceof LocalDate) {
+	            fecha = (LocalDate) row[0];
+	        } else if (row[0] instanceof String) {
+	            try {
+	                fecha = LocalDate.parse((String) row[0]);
+	            } catch (Exception e) {
+	                fecha = null;
+	            }
+	        }
+
+	        if (fecha != null) {
+	            String formateada = fecha.format(formatter);
+	            // Capitalizar primera letra (porque algunos locales devuelven en minúsculas)
+	            formateada = formateada.substring(0, 1).toUpperCase() + formateada.substring(1);
+	            fechas.add(formateada);
+	        } else {
+	            fechas.add(row[0].toString());
+	        }
+
+	        ingresosPorDia.add(row[1] != null ? ((Number) row[1]).intValue() : 0);
+	        gastosPorDia.add(row[2] != null ? ((Number) row[2]).intValue() : 0);
+	    }
+
+	    model.addAttribute("fechas", fechas);
+	    model.addAttribute("ingresosPorDia", ingresosPorDia);
+	    model.addAttribute("gastosPorDia", gastosPorDia);
+
 	    return "dashboard";
 	}
+
+
+	
+	
 	// MÉTODO AUXILIAR para reemplazar #lists.partition
 	private List<List<Map.Entry<String, Integer>>> partirLista(List<Map.Entry<String, Integer>> lista, int tamaño) {
 		List<List<Map.Entry<String, Integer>>> resultado = new ArrayList<>();

@@ -11288,4 +11288,7 @@ body.sidebar-toggled footer.sticky-footer {
     bottom: 0;
     scroll-behavior: smooth;
 }
+#balancePieChart + div {
+  display: none !important;
+}
 
