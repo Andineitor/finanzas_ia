@@ -6,9 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +26,11 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
 	private final UsuarioService userService;
-	
+
 	private final UsuarioRepository userRepo;
     private final TransaccionService transServ;
     private final CuentaService cuentaService;
-	
+
 	@GetMapping("/login-user")
     public String showLoginPage() {
         return "login"; // login.html en templates
@@ -43,7 +41,7 @@ public class AuthController {
         model.addAttribute("usuarioDto", new UsuarioDto());
         return "register";
     }
-	
+
 	@PostMapping("/register-user")
     public String registerUser(@ModelAttribute("usuarioDto") UsuarioDto request, Model model) {
         try {
@@ -54,7 +52,7 @@ public class AuthController {
             return "register";
         }
     }
-	
+
 
 
 	@GetMapping("/dashboard")
@@ -82,13 +80,28 @@ public class AuthController {
 	            : new HashMap<>();
 	    model.addAttribute("gastoCategorias", gastoCategorias);
 
+		// Filtrar categorías con gasto mayor a 40 para las tarjetas
+		List<Map.Entry<String, Integer>> categoriasMayores40 = gastoCategorias.entrySet()
+				.stream()
+				.filter(e -> e.getValue() > 40)
+				.sorted((a, b) -> b.getValue() - a.getValue())
+				.toList();
+		model.addAttribute("categoriasMayores40", categoriasMayores40);
+		model.addAttribute("categoriasMayores40Chunks", partirLista(categoriasMayores40, 4));
+
 	    // Usuario
 	    Usuario usuario = userService.findByUsername(username);
 	    model.addAttribute("usuario", usuario);
 
 	    return "dashboard";
 	}
-
-
+	// MÉTODO AUXILIAR para reemplazar #lists.partition
+	private List<List<Map.Entry<String, Integer>>> partirLista(List<Map.Entry<String, Integer>> lista, int tamaño) {
+		List<List<Map.Entry<String, Integer>>> resultado = new ArrayList<>();
+		for (int i = 0; i < lista.size(); i += tamaño) {
+			resultado.add(lista.subList(i, Math.min(i + tamaño, lista.size())));
+		}
+		return resultado;
+	}
 
 }
