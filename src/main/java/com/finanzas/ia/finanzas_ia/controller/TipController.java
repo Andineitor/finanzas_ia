@@ -40,7 +40,7 @@ public class TipController {
         UsuarioDto usuarioDto = new UsuarioDto(
             usuarioAuth.getId(),
             usuarioAuth.getUsername(),
-            null, // no envíes la password
+            null, 
             usuarioAuth.getNombre(),
             usuarioAuth.getApellido(),
             usuarioAuth.getEdad(),
@@ -51,7 +51,6 @@ public class TipController {
         );
 
         // Obtén la cuenta del usuario
-     // Obtiene la entidad Cuenta (no DTO)
         Cuenta cuenta = cuentaService.obtenerCuentaDelUsuario(usuarioAuth.getUsername())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cuenta no encontrada"));
 

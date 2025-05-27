@@ -85,5 +85,47 @@
 <script src="/vendor/jquery/jquery.min.js"></script>
 <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/js/sb-admin-2.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // === Actualiza nombre del archivo cargado ===
+        const fileInputs = document.querySelectorAll('.custom-file-input');
+        fileInputs.forEach(input => {
+            input.addEventListener('change', function (e) {
+                const fileName = e.target.files[0]?.name || 'Elegir archivo...';
+                const label = e.target.nextElementSibling;
+                if (label && label.classList.contains('custom-file-label')) {
+                    label.textContent = fileName;
+                }
+            });
+        });
+
+        // === Validación en vivo: solo letras ===
+        const soloLetras = /[^A-Za-zÁÉÍÓÚáéíóúñÑ\s]/g;
+
+        const camposLetras = ['nombre', 'apellido', 'username'];
+        camposLetras.forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener("input", function () {
+                    this.value = this.value.replace(soloLetras, '');
+                });
+            }
+        });
+
+        // === Validación de edad en tiempo real ===
+        const edadInput = document.getElementById("edad");
+        if (edadInput) {
+            edadInput.addEventListener("input", function () {
+                const edad = parseInt(this.value);
+                if (edad < 12 || edad > 60) {
+                    this.setCustomValidity("Edad inválida. Debe ser entre 12 y 120 años.");
+                } else {
+                    this.setCustomValidity("");
+                }
+            });
+        }
+    });
+</script>
+
 </body>
 </html>
