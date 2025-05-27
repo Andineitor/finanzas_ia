@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.finanzas.ia.finanzas_ia.service.TransaccionService;
 
@@ -24,6 +24,8 @@ public class TransaccionController {
     @PostMapping("/ingreso")
     public String agregarIngreso(@RequestParam Integer cantidad, Principal principal) {
     	transServ.agregarIngreso(principal.getName(), cantidad);
+    	
+    	
         return "redirect:/cuenta/dashboard";
     }
 
@@ -32,9 +34,14 @@ public class TransaccionController {
             @RequestParam String descripcion,
             @RequestParam Integer cantidad,
             @RequestParam Integer categoriaId,
-            Principal principal
+            Principal principal,
+            RedirectAttributes redirectAttrs
     ) {
-        transServ.registrarGasto(principal.getName(), descripcion, cantidad, categoriaId);
+        try {
+            transServ.registrarGasto(principal.getName(), descripcion, cantidad, categoriaId);
+        } catch (IllegalArgumentException ex) {
+            redirectAttrs.addFlashAttribute("error", ex.getMessage());
+        }
         return "redirect:/cuenta/dashboard";
     }
 }

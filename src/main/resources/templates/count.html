@@ -157,6 +157,9 @@
                     <div class="card shadow mb-4">
                         <div class="card-body">
                             <h4 class="mb-3">Registrar Gasto</h4>
+							<div class="col-md-12">
+							    <div id="error-gasto" class="alert alert-danger d-none" role="alert"></div>
+							</div>
                             <form action="/transaccion/gasto" method="post" class="row g-3">
                                 <div class="col-md-4">
                                     <input type="text" name="descripcion" class="form-control form-control-user" placeholder="Descripción" required>
@@ -173,12 +176,11 @@
                                     </select>
                                 </div>
                                 <div class="col-auto">
-                                    <button class="btn btn-danger btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-minus"></i>
-                                        </span>
-                                        <span class="text">Registrar</span>
-                                    </button>
+									<button class="btn btn-danger btn-icon-split"
+									        th:disabled="${cuenta.ingreso == 0}">
+									    <span class="icon text-white-50"><i class="fas fa-minus"></i></span>
+									    <span class="text">Registrar</span>
+									</button>
                                 </div>
                             </form>
                         </div>
@@ -229,7 +231,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="ingreso">Ingreso inicial</label>
-                                    <input type="number" class="form-control form-control-user" id="ingreso" name="ingreso" required>
+									<input type="number" class="form-control form-control-user" id="ingreso" name="ingreso" required min="1" max="999999999">
                                 </div>
                                 <div class="form-group">
                                     <label for="fecha">Fecha</label>
@@ -287,6 +289,8 @@
     document.addEventListener('DOMContentLoaded', function () {
         const ingresoInput = document.querySelector('form[action="/transaccion/ingreso"] input[name="cantidad"]');
         const gastoInput = document.querySelector('form[action="/transaccion/gasto"] input[name="cantidad"]');
+		const registroIngresoInput = document.querySelector('form[action="/cuenta/registrar"] input[name="ingreso"]');
+
 
         function validarCantidad(input) {
             input.addEventListener('input', function () {
@@ -305,6 +309,34 @@
         if (ingresoInput) validarCantidad(ingresoInput);
         if (gastoInput) validarCantidad(gastoInput);
     });
+</script>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+	    const gastoForm = document.querySelector('form[action="/transaccion/gasto"]');
+	    const gastoInput = gastoForm.querySelector('input[name="cantidad"]');
+	    const errorDiv = document.getElementById('error-gasto');
+
+	    gastoForm.addEventListener('submit', function (e) {
+	        const valor = parseInt(gastoInput.value, 10);
+	        const ingresoActual = parseInt(document.querySelector('.ingreso-display span').innerText, 10);
+
+	        if (isNaN(valor) || valor <= 0) {
+	            e.preventDefault();
+	            mostrarError("Debes ingresar un número mayor a 0.");
+	            return;
+	        }
+
+	        if (valor > ingresoActual) {
+	            e.preventDefault();
+	            mostrarError("No puedes gastar más de lo que tienes.");
+	        }
+	    });
+
+	    function mostrarError(mensaje) {
+	        errorDiv.textContent = mensaje;
+	        errorDiv.classList.remove('d-none');
+	    }
+	});
 </script>
 
 
