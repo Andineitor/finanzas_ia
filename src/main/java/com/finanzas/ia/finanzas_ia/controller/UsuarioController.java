@@ -61,15 +61,21 @@ public class UsuarioController {
 	public String actualizarUsuario(
 	        @ModelAttribute UsuarioDto usuarioDto,
 	        @RequestParam(value = "imagenPerfil", required = false) MultipartFile imagen,
-	        Model model) {
-	    try {
+	        Model model, Principal principal) {
+		try {
 	        usuarioService.actualizarUsuario(usuarioDto, imagen);
 	        return "redirect:/dashboard";
 	    } catch (IOException e) {
 	        model.addAttribute("error", "Error al subir la imagen: " + e.getMessage());
-	        model.addAttribute("usuario", usuarioDto);
-	        return "user";
+	    } catch (RuntimeException e) {
+	        model.addAttribute("error", e.getMessage());
 	    }
+        	Usuario usuario = usuarioService.findByUsername(principal.getName());
+	        model.addAttribute("usuario", usuarioDto);
+	        Optional<Cuenta> cuentaOpt = cuentaService.obtenerCuentaDelUsuario(principal.getName());
+	        model.addAttribute("cuenta", cuentaOpt.orElse(null));
+	        return "user";
+	    
 	}
 
 

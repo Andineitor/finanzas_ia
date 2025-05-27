@@ -13,6 +13,8 @@ public interface UsuarioService {
     Usuario login(UsuarioDto request);
     
     Usuario findByUsername(String username);
+    Usuario findByEmail(String username);
+
     void actualizarUsuario(UsuarioDto usuarioDto, MultipartFile imagen) throws IOException;
 
 }

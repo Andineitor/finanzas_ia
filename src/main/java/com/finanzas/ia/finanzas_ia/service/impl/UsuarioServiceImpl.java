@@ -37,6 +37,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 		if (userRepo.findByUsername(request.getUsername()).isPresent()) {
             throw new RuntimeException("Usuario ya existe");
 		}
+		if (userRepo.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Email ya existe");
+		}
 		Usuario user = new Usuario();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -70,6 +73,18 @@ public class UsuarioServiceImpl implements UsuarioService {
 	    Usuario usuario = userRepo.findById(dto.getId())
 	        .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con id: " + dto.getId()));
 
+	    // Verifica si otro usuario ya usa ese username
+	    Optional<Usuario> usuarioConMismoUsername = userRepo.findByUsername(dto.getUsername());
+	    if (usuarioConMismoUsername.isPresent() && !usuarioConMismoUsername.get().getId().equals(dto.getId())) {
+	        throw new RuntimeException("Username ya lo utiliza otro usuario");
+	    }
+
+	    // Verifica si otro usuario ya usa ese email
+	    Optional<Usuario> usuarioConMismoEmail = userRepo.findByEmail(dto.getEmail());
+	    if (usuarioConMismoEmail.isPresent() && !usuarioConMismoEmail.get().getId().equals(dto.getId())) {
+	        throw new RuntimeException("Email ya pertenece a otro usuario");
+	    }
+
 	    usuario.setNombre(dto.getNombre());
 	    usuario.setApellido(dto.getApellido());
 	    usuario.setEdad(dto.getEdad());
@@ -86,9 +101,15 @@ public class UsuarioServiceImpl implements UsuarioService {
 	        usuario.setFotoPerfilBase64(base64);
 	    } else if (dto.getFotoPerfilBase64() != null) {
 	        usuario.setFotoPerfilBase64(dto.getFotoPerfilBase64());
-	    } // si no envían imagen ni base64, no cambies nada
+	    }
 
 	    userRepo.save(usuario);
+	}
+
+	@Override
+	public Usuario findByEmail(String username) {
+		return userRepo.findByEmail(username)
+	            .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 	}
 
 		

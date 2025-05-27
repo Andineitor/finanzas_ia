@@ -51,6 +51,7 @@ public class AuthController {
             return "redirect:/login-user";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
+            model.addAttribute("usuario", request);
             return "register";
         }
     }
