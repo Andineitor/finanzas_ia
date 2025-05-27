@@ -183,61 +183,69 @@
 				        <div class="card shadow">
 				            <div class="card-body p-4">
 				                <h6 class="mb-3 font-weight-bold text-primary">Editar Perfil de Usuario</h6>
+								<div th:if="${error}" class="mt-3 alert alert-danger">
+									<span th:text="${error}"></span>
+								</div>
 								<form th:action="@{/user/actualizar}" th:object="${usuario}" method="post" enctype="multipart/form-data" class="user">
-				                    <input type="hidden" th:field="*{id}" />
+								    <input type="hidden" th:field="*{id}" />
 
-				                    <div class="form-group row">
-				                        <div class="col-sm-6 mb-3 mb-sm-0">
-				                            <input type="text" th:field="*{nombre}" class="form-control form-control-user" placeholder="Nombre" required>
-				                        </div>
-				                        <div class="col-sm-6">
-				                            <input type="text" th:field="*{apellido}" class="form-control form-control-user" placeholder="Apellido" required>
-				                        </div>
-				                    </div>
+								    <div class="form-group row">
+								        <div class="col-sm-6 mb-3 mb-sm-0">
+								            <input type="text" th:field="*{nombre}" class="form-control form-control-user"
+								                   placeholder="Nombre" required pattern="^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]{2,40}$"
+								                   title="Solo letras y espacios. Mínimo 2 caracteres.">
+								        </div>
+								        <div class="col-sm-6">
+								            <input type="text" th:field="*{apellido}" class="form-control form-control-user"
+								                   placeholder="Apellido" required pattern="^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]{2,40}$"
+								                   title="Solo letras y espacios. Mínimo 2 caracteres.">
+								        </div>
+								    </div>
 
-				                    <div class="form-group">
-				                        <input type="number" th:field="*{edad}" class="form-control form-control-user" placeholder="Edad" required>
-				                    </div>
+								    <div class="form-group">
+								        <input type="number" th:field="*{edad}" class="form-control form-control-user"
+								               placeholder="Edad" required min="12" max="120"
+								               title="Debes tener al menos 12 años y máximo 120.">
+								    </div>
 
-				                    <div class="form-group">
-				                        <input type="email" th:field="*{email}" class="form-control form-control-user" placeholder="Correo Electrónico" required>
-				                    </div>
+								    <div class="form-group">
+								        <input type="email" th:field="*{email}" class="form-control form-control-user"
+								               placeholder="Correo Electrónico" required>
+								    </div>
 
-									<div class="form-group">
-									    <label for="sexo" class="form-label font-weight-bold text-gray-500">Sexo</label>
-									    <div class="input-group">
-									        <select th:field="*{sexo}" class="form-control rounded-pill" id="sexo" required>
-									            <option value="" disabled 
-									                th:selected="${usuario.sexo == null or usuario.sexo == ''}">Seleccione sexo</option>
-									            <option value="Masculino" th:selected="${usuario.sexo == 'Masculino'}">Masculino</option>
-									            <option value="Femenino" th:selected="${usuario.sexo == 'Femenino'}">Femenino</option>
-									        </select>
-									    </div>
-									</div>
+								    <div class="form-group">
+								        <label for="sexo" class="form-label font-weight-bold text-gray-500">Sexo</label>
+								        <div class="input-group">
+								            <select th:field="*{sexo}" class="form-control rounded-pill" id="sexo" required>
+								                <option value="" disabled th:selected="${usuario.sexo == null or usuario.sexo == ''}">Seleccione sexo</option>
+								                <option value="Masculino" th:selected="${usuario.sexo == 'Masculino'}">Masculino</option>
+								                <option value="Femenino" th:selected="${usuario.sexo == 'Femenino'}">Femenino</option>
+								            </select>
+								        </div>
+								    </div>
 
-									<div class="form-group">
-									    <label class="font-weight-bold text-gray-500 mb-2" for="imagenPerfil">Foto de Perfil</label>
-									    <div class="custom-file">
-									        <input type="file" class="custom-file-input" id="imagenPerfil" name="imagenPerfil" accept="image/*">
-									        <label class="custom-file-label" for="imagenPerfil">Elegir archivo...</label>
-									    </div>
-									</div>
+								    <div class="form-group">
+								        <label class="font-weight-bold text-gray-500 mb-2" for="imagenPerfil">Foto de Perfil</label>
+								        <div class="custom-file">
+								            <input type="file" class="custom-file-input" id="imagenPerfil" name="imagenPerfil" accept="image/*">
+								            <label class="custom-file-label" for="imagenPerfil">Elegir archivo...</label>
+								        </div>
+								    </div>
 
-				                    <div class="form-group">
-				                        <input type="text" th:field="*{username}" class="form-control form-control-user" placeholder="Nombre de Usuario" required>
-				                    </div>
+								    <div class="form-group">
+								        <input type="text" th:field="*{username}" class="form-control form-control-user"
+								               placeholder="Nombre de Usuario" required pattern="^[A-Za-zÁÉÍÓÚáéíóúñÑ]{4,20}$"
+								               title="Solo letras, sin espacios ni números.">
+								    </div>
 
-				                    <div class="form-group">
-				                        <input type="password" th:field="*{password}" class="form-control form-control-user" placeholder="Nueva Contraseña">
-				                    </div>
+								    <div class="form-group">
+								        <input type="password" th:field="*{password}" class="form-control form-control-user"
+								               placeholder="Nueva Contraseña">
+								    </div>
 
-				                    <button type="submit" class="btn btn-primary btn-user btn-block">Guardar Cambios</button>
-				                    <a href="/dashboard" class="btn btn-secondary btn-user btn-block">Cancelar</a>
-
-				                    <div th:if="${error}" class="mt-3 alert alert-danger">
-				                        <span th:text="${error}"></span>
-				                    </div>
-				                </form>
+								    <button type="submit" class="btn btn-primary btn-user btn-block">Guardar Cambios</button>
+								    <a href="/dashboard" class="btn btn-secondary btn-user btn-block">Cancelar</a>
+								</form>
 				            </div>
 				        </div>
 				    </div>
@@ -264,5 +272,47 @@
 <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
 <script src="/vendor/chart.js/Chart.min.js"></script>
 <script src="/js/sb-admin-2.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // === Actualiza nombre del archivo cargado ===
+        const fileInputs = document.querySelectorAll('.custom-file-input');
+        fileInputs.forEach(input => {
+            input.addEventListener('change', function (e) {
+                const fileName = e.target.files[0]?.name || 'Elegir archivo...';
+                const label = e.target.nextElementSibling;
+                if (label && label.classList.contains('custom-file-label')) {
+                    label.textContent = fileName;
+                }
+            });
+        });
+
+        // === Validación en vivo: solo letras ===
+        const soloLetras = /[^A-Za-zÁÉÍÓÚáéíóúñÑ\s]/g;
+
+        const camposLetras = ['nombre', 'apellido', 'username'];
+        camposLetras.forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener("input", function () {
+                    this.value = this.value.replace(soloLetras, '');
+                });
+            }
+        });
+
+        // === Validación de edad en tiempo real ===
+        const edadInput = document.getElementById("edad");
+        if (edadInput) {
+            edadInput.addEventListener("input", function () {
+                const edad = parseInt(this.value);
+                if (edad < 12 || edad > 60) {
+                    this.setCustomValidity("Edad inválida. Debe ser entre 12 y 120.");
+                } else {
+                    this.setCustomValidity("");
+                }
+            });
+        }
+    });
+</script>
+
 </body>
 </html>

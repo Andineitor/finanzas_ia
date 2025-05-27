@@ -11,4 +11,5 @@ import com.finanzas.ia.finanzas_ia.entity.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
 
 	Optional<Usuario> findByUsername(String username);
+	Optional<Usuario> findByEmail(String email);
 }

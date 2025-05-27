@@ -44,5 +44,4 @@ public class Tip {
         this.timestamp = timestamp;
     }
 
-    // getters y setters generados por Lombok o manuales
 }
