@@ -37,11 +37,12 @@ public class Usuario implements UserDetails{
     private Integer id;
 
 	private String nombre;
-	
+		
 	private String apellido;
 	
 	private Integer edad;
 	
+	@Column(unique = true)
 	private String email;
 	
 	private String sexo;
