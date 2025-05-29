@@ -1,11 +1,11 @@
 package com.finanzas.ia.finanzas_ia.controller;
 
 import java.security.Principal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -42,17 +42,29 @@ public class TransaccionController {
             @RequestParam String descripcion,
             @RequestParam Integer cantidad,
             @RequestParam Integer categoriaId,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date fecha,
+            @RequestParam(required = false) String fecha,
             Principal principal,
             RedirectAttributes redirectAttrs
     ) {
         try {
-            transServ.registrarGasto(principal.getName(), descripcion, cantidad, categoriaId, fecha);
+            Date fechaParsed = null;
+            if (fecha != null && !fecha.isBlank()) {
+                try {
+                    fechaParsed = new SimpleDateFormat("yyyy-MM-dd").parse(fecha);
+                } catch (ParseException e) {
+                    redirectAttrs.addFlashAttribute("error", "Formato de fecha inválido. Usa yyyy-MM-dd");
+                    return "redirect:/cuenta/dashboard";
+                }
+            }
+
+            transServ.registrarGasto(principal.getName(), descripcion, cantidad, categoriaId, fechaParsed);
         } catch (IllegalArgumentException ex) {
             redirectAttrs.addFlashAttribute("error", ex.getMessage());
         }
+
         return "redirect:/cuenta/dashboard";
     }
+
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
