@@ -1,10 +1,14 @@
 package com.finanzas.ia.finanzas_ia.controller;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,10 +54,23 @@ public class TransaccionController {
         return "redirect:/cuenta/dashboard";
     }
     
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+    }
+
     @PostMapping("/editar")
-    public String editar(@ModelAttribute Transaccion transaccion) {
-        transServ.editarTransaccion(transaccion);
-        return "redirect:/cuenta/dashboard"; // o a donde quieras
+    public String editar(@ModelAttribute Transaccion transaccion, RedirectAttributes redirectAttrs) {
+        try {
+            transServ.editarTransaccion(transaccion);
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttrs.addFlashAttribute("errorMessage", "Error al editar: " + e.getMessage());
+            return "redirect:/transaccion/editar";
+        }
+        return "redirect:/cuenta/dashboard";
     }
 
     @PostMapping("/eliminar")
