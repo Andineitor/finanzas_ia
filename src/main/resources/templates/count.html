@@ -56,7 +56,7 @@
 		                <div class="sidebar-brand-text mx-3">Finanzas Hormigas <sup>IA</sup></div>
 		            </a>
 
-		            <!-- Divider -->
+					<!-- Divider -->
 		            <hr class="sidebar-divider my-0">
 
 		            <!-- Nav Item - Dashboard -->
@@ -75,12 +75,19 @@
 		                Cuenta
 		            </div>
 
+					<li class="nav-item">
+					    <a class="nav-link" href="/cuenta">
+							<i class="fas fa-fw fa-wallet"></i>
+					        <span>Mi Cartera</span>
+					    </a>
+					</li>
+					
 					<li class="nav-item active">
-					   <a class="nav-link" href="/cuenta/dashboard">
+						<a class="nav-link" href="/cuenta/dashboard">
 					     <i class="fas fa-fw fa-table"></i>
 					     <span>Transacciones</span>
 					   </a>
-					 </li>
+					</li>
 		            <!-- Divider -->
 		            <hr class="sidebar-divider">
 
@@ -88,13 +95,29 @@
 		            <div class="sidebar-heading">
 		                Consejos
 		            </div>
+		          
+		            <!-- Nav Item - Charts -->
+					<li class="nav-item">
+					    <a class="nav-link" href="/tip/dashboard">
+							<i class="fas fa-fw fa-user-astronaut"></i>
+					        <span>Asistente</span>
+					    </a>
+					</li>
+					
+					<!-- Divider -->
+		            <hr class="sidebar-divider">
+
+		            <!-- Heading -->
+		            <div class="sidebar-heading">
+		                Configuración
+		            </div>
 
 		          
 		            <!-- Nav Item - Charts -->
 		            <li class="nav-item">
-		                <a class="nav-link" href="/tip/dashboard">
-		                    <i class="fas fa-fw fa-chart-area"></i>
-		                <span>?</span></a>
+		                <a class="nav-link" href="/user/profile">
+							<i class="fas fa-fw fa-cogs"></i>
+		                <span>Perfil</span></a>
 		            </li>
 
 		        
@@ -105,6 +128,8 @@
 		            <div class="text-center d-none d-md-inline">
 		                <button class="rounded-circle border-0" id="sidebarToggle"></button>
 		            </div>
+					
+					
 
 		        </ul>
 		        <!-- End of Sidebar -->
@@ -123,7 +148,36 @@
 					    <img src="/img/ahorrar-dinero.png" alt="Icono movimientos" style="height: 1.5em; margin-left: 0.5em;">
 					</h1>
 
+				<div class="row justify-content-center">
 
+				<!-- Mensajes de advertencia cuando NO hay cuenta -->
+				<div class="col-lg-6 mb-4" th:if="${cuenta == null}">
+
+					    <div style="
+					        background-color: #fff3cd; 
+					        border: 1px solid #ffeeba; 
+					        border-radius: 8px; 
+					        padding: 1rem 1.5rem; 
+					        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+					        font-weight: 600;
+					        color: #856404;
+					        margin-bottom: 1rem;">
+					        <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
+							<span th:text="${mensaje} ?: 'No tienes una cuenta creada aún.'"></span>
+					    </div>
+					    <div style="
+					        background-color: #d1ecf1; 
+					        border: 1px solid #bee5eb; 
+					        border-radius: 8px; 
+					        padding: 1rem 1.5rem; 
+					        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+					        font-weight: 600;
+					        color: #0c5460;">
+					        <i class="fas fa-info-circle" style="margin-right: 8px;"></i>
+					        <span>Recuerda crear tu cuenta para empezar a registrar tus finanzas.</span>
+					    </div>
+					</div>
+				</div>
                 <!-- Mostrar cuenta si existe -->
                 <div th:if="${cuenta != null}">
 
@@ -140,7 +194,7 @@
                                     <form action="/transaccion/ingreso" method="post" class="form-inline">
                                         <input type="hidden" name="descripcion" value="Ingreso manual">
                                         <div class="input-group">
-                                            <input type="number" name="cantidad" class="form-control bg-light border-0 small" placeholder="Agregar ingreso" required min="1" max="999999999">
+                                            <input type="number" name="cantidad" class="form-control bg-light border-0 small" placeholder="Agregar Ingreso" required min="1" max="999999999">
                                             <div class="input-group-append">
                                                 <button class="btn btn-success btn-circle" type="submit">
                                                     <i class="fas fa-plus"></i>
@@ -160,29 +214,35 @@
 							<div class="col-md-12">
 							    <div id="error-gasto" class="alert alert-danger d-none" role="alert"></div>
 							</div>
-                            <form action="/transaccion/gasto" method="post" class="row g-3">
-                                <div class="col-md-4">
-                                    <input type="text" name="descripcion" class="form-control form-control-user" placeholder="Descripción" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <input type="number" name="cantidad" class="form-control form-control-user" placeholder="Cantidad" required min="1" max="999999999">
-                                </div>
-                                <div class="col-md-3">
-                                    <select name="categoriaId" class="form-control" required>
-                                        <option value="" disabled selected>Selecciona categoría</option>
-                                        <option th:each="categoria : ${categorias}" 
-                                                th:value="${categoria.id}" 
-                                                th:text="${categoria.nombre}"></option>
-                                    </select>
-                                </div>
-                                <div class="col-auto">
-									<button class="btn btn-danger btn-icon-split"
-									        th:disabled="${cuenta.ingreso == 0}">
-									    <span class="icon text-white-50"><i class="fas fa-minus"></i></span>
-									    <span class="text">Registrar</span>
-									</button>
-                                </div>
-                            </form>
+					<form action="/transaccion/gasto" method="post" class="row align-items-end g-2">
+					           <div class="col-md-2">
+					               <label for="fecha" class="form-label">Fecha</label>
+					               <input type="date" name="fecha" class="form-control">
+					           </div>
+					           <div class="col-md-3">
+					               <label for="descripcion" class="form-label">Descripción</label>
+					               <input type="text" name="descripcion" class="form-control" placeholder="Descripción" required>
+					           </div>
+					           <div class="col-md-2">
+					               <label for="cantidad" class="form-label">Valor</label>
+					               <input type="number" name="cantidad" class="form-control" placeholder="Valor" required min="1" max="999999999">
+					           </div>
+					           <div class="col-md-3">
+					               <label for="categoriaId" class="form-label">Categoría</label>
+								   <select name="categoriaId" class="form-control" required>
+					                   <option value="" disabled selected>Selecciona categoría</option>
+					                   <option th:each="categoria : ${categorias}" 
+					                           th:value="${categoria.id}" 
+					                           th:text="${categoria.nombre}"></option>
+					               </select>
+					           </div>
+					           <div class="col-md-2 d-grid">
+					               <button class="btn btn-danger"
+					                       th:disabled="${cuenta.ingreso == 0}">
+					                   <i class="fas fa-minus me-1"></i> Registrar
+					               </button>
+					           </div>
+					       </form>
                         </div>
                     </div>
 
@@ -198,51 +258,102 @@
                                             <th>Descripción</th>
                                             <th>Monto</th>
                                             <th>Tipo</th>
+											<th>Acciones</th> <!-- NUEVA COLUMNA -->
+
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr th:each="transaccion : ${transacciones}">
-                                            <td th:text="${#dates.format(transaccion.fecha, 'dd/MM/yyyy')}">01/01/2024</td>
-                                            <td th:text="${transaccion.descripcion}">Compra</td>
-                                            <td th:text="${transaccion.cantidad}">$0</td>
-                                            <td th:text="${transaccion.tipo}">ingreso</td>
-                                        </tr>
-                                    </tbody>
+									<tbody>
+										<tr th:each="transaccion : ${transacciones}">
+										    <td th:text="${#dates.format(transaccion.fecha, 'dd/MM/yyyy')}">01/01/2024</td>
+										    <td th:text="${transaccion.descripcion}">Compra</td>
+										    <td th:text="${transaccion.cantidad}">$0</td>
+										    <td th:text="${transaccion.tipo}">INGRESO</td>
+										    <td>
+										        <!-- Editar -->
+										        <button 
+										            class="btn btn-sm btn-primary" 
+										            data-bs-toggle="modal" 
+										            data-bs-target="#modalEditar"
+										            th:attr="data-id=${transaccion.id}, 
+										                     data-fecha=${#dates.format(transaccion.fecha, 'yyyy-MM-dd')}, 
+										                     data-descripcion=${transaccion.descripcion}, 
+										                     data-cantidad=${transaccion.cantidad}">
+										            <i class="fas fa-edit"></i>
+										        </button>
+
+										        <!-- Eliminar -->
+										        <button 
+										            class="btn btn-sm btn-danger" 
+										            data-bs-toggle="modal" 
+										            data-bs-target="#modalEliminar"
+										            th:attr="data-id=${transaccion.id}">
+										            <i class="fas fa-trash-alt"></i>
+										        </button>
+										    </td>
+										</tr>
+									</tbody>
                                 </table>
                             </div>
+							<div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+							  <div class="modal-dialog">
+							    <form method="post" action="/transaccion/editar">
+							      <div class="modal-content">
+							        <div class="modal-header">
+							          <h5 class="modal-title">Editar Transacción</h5>
+							          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+							        </div>
+							        <div class="modal-body">
+							          <input type="hidden" name="id" id="edit-id">
+							          <div class="mb-3">
+							            <label>Fecha</label>
+							            <input type="date" name="fecha" id="edit-fecha" class="form-control">
+							          </div>
+							          <div class="mb-3">
+										<label for="edit-descripcion">Descripción</label>
+										<input id="edit-descripcion" type="text" name="descripcion" class="form-control">
+							          </div>
+							          <div class="mb-3">
+							            <label>Cantidad</label>
+							            <input type="number" name="cantidad" id="edit-cantidad" class="form-control">
+							          </div>
+							        </div>
+							        <div class="modal-footer">
+							          <button type="submit" class="btn btn-success">Guardar Cambios</button>
+							        </div>
+							      </div>
+							    </form>
+							  </div>
+							</div>
+
+							
+							
+							
+							<div class="modal fade" id="modalEliminar" tabindex="-1" aria-hidden="true">
+							  <div class="modal-dialog">
+								<form method="post" action="/transaccion/eliminar" id="formEliminar">
+							      <div class="modal-content">
+							        <div class="modal-header bg-danger text-white">
+							          <h5 class="modal-title">¿Eliminar transacción?</h5>
+							          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+							        </div>
+							        <div class="modal-body">
+										<input type="hidden" name="id" id="delete-id">
+							          Esta acción no se puede deshacer.
+							        </div>
+							        <div class="modal-footer">
+							          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+									  <button type="submit" class="btn btn-danger">
+									    Eliminar
+									  </button>
+							        </div>
+							      </div>
+							    </form>
+							  </div>
+							</div>
+
                         </div>
                     </div>
 
-                </div>
-
-                <!-- Mostrar formulario si NO hay cuenta -->
-                <div th:if="${cuenta == null}">
-                    <div class="card shadow mb-4">
-                        <div class="card-body">
-                            <h4 class="mb-3">Crear una cuenta</h4>
-                            <form action="/cuenta/registrar" method="post" class="user">
-                                <div class="form-group">
-                                    <label for="nombre">Nombre de la cuenta</label>
-                                    <input type="text" class="form-control form-control-user" id="nombre" name="nombre" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="descripcion">Descripción</label>
-                                    <input type="text" class="form-control form-control-user" id="descripcion" name="descripcion" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ingreso">Ingreso inicial</label>
-									<input type="number" class="form-control form-control-user" id="ingreso" name="ingreso" required min="1" max="999999999">
-                                </div>
-                                <div class="form-group">
-                                    <label for="fecha">Fecha</label>
-                                    <input type="date" class="form-control form-control-user" id="fecha" name="fecha" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-user btn-block">
-                                    Crear cuenta
-                                </button>
-                            </form>
-                        </div>
-                    </div>
                 </div>
 
             </div>
@@ -281,7 +392,7 @@
                 "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
             },
             "pageLength": 5,
-            "order": [[0, "desc"]]
+            "order": [[1, "ASC"]]
         });
     });
 </script>
@@ -338,7 +449,26 @@
 	    }
 	});
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modalEditar = document.getElementById('modalEditar');
+    modalEditar.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        document.getElementById('edit-id').value = button.getAttribute('data-id');
+        document.getElementById('edit-fecha').value = button.getAttribute('data-fecha');
+        document.getElementById('edit-descripcion').value = button.getAttribute('data-descripcion');
+        document.getElementById('edit-cantidad').value = button.getAttribute('data-cantidad');
+    });
 
+	const modalEliminar = document.getElementById('modalEliminar');
+	modalEliminar.addEventListener('show.bs.modal', event => {
+	  const button = event.relatedTarget; // Botón que activó el modal
+	  const id = button.getAttribute('data-id'); // ID que viene del botón
+	  const inputId = modalEliminar.querySelector('#delete-id');
+	  inputId.value = id; // Setear el id en el input hidden
+	});
+});
+</script>
 
 </body>
 </html>

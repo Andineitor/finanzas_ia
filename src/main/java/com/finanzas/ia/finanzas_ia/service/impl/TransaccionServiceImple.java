@@ -22,6 +22,7 @@ import com.finanzas.ia.finanzas_ia.repository.TransaccionRepository;
 import com.finanzas.ia.finanzas_ia.service.CuentaService;
 import com.finanzas.ia.finanzas_ia.service.TransaccionService;
 
+import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -58,7 +59,7 @@ public class TransaccionServiceImple implements TransaccionService {
         t.setDescripcion("Ingreso adicional");
         t.setCantidad(cantidad);
         t.setFecha(new Date());
-        t.setTipo("ingreso");
+        t.setTipo("INGRESO");
         t.setUsuario(cuenta.getUsuario());
         t.setTransaccionfFamiliar(false);
         t.setCuenta(cuenta);
@@ -67,7 +68,7 @@ public class TransaccionServiceImple implements TransaccionService {
     }
 
     @Override
-    public void registrarGasto(String username, String descripcion, Integer cantidad, Integer categoriId) {
+    public void registrarGasto(String username, String descripcion, Integer cantidad, Integer categoriId, @Nullable Date fecha) {
         Cuenta cuenta = cuentaServ.obtenerCuentaDelUsuario(username).orElseThrow();
         cuenta.setIngreso(cuenta.getIngreso() - cantidad);
         cuentaRepo.save(cuenta);
@@ -75,9 +76,8 @@ public class TransaccionServiceImple implements TransaccionService {
         Transaccion t = new Transaccion();
         t.setDescripcion(descripcion);
         t.setCantidad(cantidad);
-        // ¡positivo! el tipo ahora lo define
-        t.setFecha(new Date());
-        t.setTipo("gasto");
+        t.setFecha(fecha != null ? fecha : new Date());
+        t.setTipo("EGRESO");
         t.setUsuario(cuenta.getUsuario());
 
         t.setTransaccionfFamiliar(false);
@@ -94,7 +94,7 @@ public class TransaccionServiceImple implements TransaccionService {
     public Integer calcularTotalGastos(Cuenta cuenta) {
         // Calcular los gastos totales solo de las transacciones de tipo "gasto"
         return cuenta.getTransacciones().stream()
-            .filter(t -> "gasto".equalsIgnoreCase(t.getTipo())) // Solo gastos
+            .filter(t -> "EGRESO".equalsIgnoreCase(t.getTipo())) // Solo gastos
             .mapToInt(Transaccion::getCantidad)
             .sum();
     }
@@ -105,7 +105,7 @@ public class TransaccionServiceImple implements TransaccionService {
     public Map<String, Integer> obtenerGastosPorCategoria(Cuenta cuenta) {
         // Filtrar las transacciones de tipo "gasto" y que tengan una categoría
         return cuenta.getTransacciones().stream()
-            .filter(t -> "gasto".equalsIgnoreCase(t.getTipo()) && t.getCategoria() != null)
+            .filter(t -> "EGRESO".equalsIgnoreCase(t.getTipo()) && t.getCategoria() != null)
             .collect(Collectors.groupingBy(
                 t -> t.getCategoria().getNombre(), // Agrupar por nombre de categoría
                 Collectors.summingInt(Transaccion::getCantidad) // Sumar las cantidades
@@ -152,6 +152,21 @@ public class TransaccionServiceImple implements TransaccionService {
         return transRepo.obtenerIngresosYGastosPorFecha(usuarioId);
     }
 
+
+    @Override
+    public void editarTransaccion(Transaccion tActualizada) {
+        Transaccion t = transRepo.findById(tActualizada.getId()).orElseThrow();
+        t.setDescripcion(tActualizada.getDescripcion());
+        t.setCantidad(tActualizada.getCantidad());
+        t.setFecha(tActualizada.getFecha());
+        transRepo.save(t);
+    }
+
+    @Override
+    public void eliminarTransaccion(Integer id) {
+        Transaccion t = transRepo.findById(id).orElseThrow();
+        transRepo.delete(t);
+    }
 
 
 

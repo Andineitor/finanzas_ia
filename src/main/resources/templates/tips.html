@@ -90,7 +90,7 @@
 			                <div class="sidebar-brand-text mx-3">Finanzas Hormigas <sup>IA</sup></div>
 			            </a>
 
-			            <!-- Divider -->
+						<!-- Divider -->
 			            <hr class="sidebar-divider my-0">
 
 			            <!-- Nav Item - Dashboard -->
@@ -109,12 +109,18 @@
 			                Cuenta
 			            </div>
 
-						<li class="nav-item ">
-						   <a class="nav-link" href="/cuenta/dashboard">
+						<li class="nav-item">
+						    <a class="nav-link" href="/cuenta">
+								<i class="fas fa-fw fa-wallet"></i>
+						        <span>Mi Cartera</span>
+						    </a>
+							<a class="nav-link" href="/cuenta/dashboard">
 						     <i class="fas fa-fw fa-table"></i>
 						     <span>Transacciones</span>
 						   </a>
-						 </li>
+						</li>
+						
+						
 			            <!-- Divider -->
 			            <hr class="sidebar-divider">
 
@@ -122,13 +128,29 @@
 			            <div class="sidebar-heading">
 			                Consejos
 			            </div>
+			          
+			            <!-- Nav Item - Charts -->
+						<li class="nav-item active">
+						    <a class="nav-link" href="/tip/dashboard">
+								<i class="fas fa-fw fa-user-astronaut"></i>
+						        <span>Asistente</span>
+						    </a>
+						</li>
+						
+						<!-- Divider -->
+			            <hr class="sidebar-divider">
+
+			            <!-- Heading -->
+			            <div class="sidebar-heading">
+			                Configuración
+			            </div>
 
 			          
 			            <!-- Nav Item - Charts -->
-			            <li class="nav-item active">
-							<a class="nav-link" th:href="@{/tip/dashboard}">
-			                    <i class="fas fa-fw fa-chart-area"></i>
-			                <span>?</span></a>
+			            <li class="nav-item ">
+			                <a class="nav-link" href="/user/profile">
+								<i class="fas fa-fw fa-cogs"></i>
+			                <span>Perfil</span></a>
 			            </li>
 
 			        
@@ -139,8 +161,10 @@
 			            <div class="text-center d-none d-md-inline">
 			                <button class="rounded-circle border-0" id="sidebarToggle"></button>
 			            </div>
+						
+						
 
-			   </ul>
+			        </ul>
 			        <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->

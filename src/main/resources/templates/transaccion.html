@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Finanzas</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+	<link href="/css/sb-admin-2.min.css" rel="stylesheet">
+	<style>
+	       .ingreso-display {
+	           font-size: 2.8rem;
+	           font-weight: 800;
+	           color: rgb(12, 216, 180);
+	       }
+	   </style>
+
+    <style>
+        body {
+            background-color: #f8f9fc;
+        }
+        .chat-container {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .chat-bubble {
+            padding: 1rem;
+            border-radius: 1rem;
+            max-width: 70%;
+        }
+        .chat-user {
+            background-color: #4e73df;
+            color: white;
+            align-self: end;
+        }
+        .chat-ia {
+            background-color: #e2e6ea;
+            color: black;
+            align-self: start;
+        }
+        .chat-meta {
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+	
+	<!-- Sidebar -->
+	<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+			            <!-- Sidebar - Brand -->
+			            <a class="sidebar-brand d-flex align-items-center justify-content-center" th:href="@{/dashboard}">
+							<div class="sidebar-brand-icon">
+							    <img src="/img/hormiga.png" alt="Logo Finanzas" style="height: 40px;">
+							</div>
+			                <div class="sidebar-brand-text mx-3">Finanzas Hormigas <sup>IA</sup></div>
+			            </a>
+
+			            <!-- Divider -->
+			            <hr class="sidebar-divider my-0">
+
+			            <!-- Nav Item - Dashboard -->
+						<li class="nav-item ">
+						   <a class="nav-link" th:href="@{/dashboard}">
+						       <i class="fas fa-fw fa-tachometer-alt"></i>
+						      <span>Dashboard</span>
+						   </a>
+						 </li>
+
+			            <!-- Divider -->
+			            <hr class="sidebar-divider">
+
+			            <!-- Heading -->
+			            <div class="sidebar-heading">
+			                Cuenta
+			            </div>
+
+						<li class="nav-item active">
+						    <a class="nav-link" href="/cuenta">
+								<i class="fas fa-fw fa-wallet"></i>
+						        <span>Mi Cartera</span>
+						    </a>
+						</li>
+						
+						<li class="nav-item ">
+							<a class="nav-link" href="/cuenta/dashboard">
+						     <i class="fas fa-fw fa-table"></i>
+						     <span>Transacciones</span>
+						   </a>
+						</li>
+	
+						
+			            <!-- Divider -->
+			            <hr class="sidebar-divider">
+
+			            <!-- Heading -->
+			            <div class="sidebar-heading">
+			                Consejos
+			            </div>
+			          
+			            <!-- Nav Item - Charts -->
+						<li class="nav-item">
+						    <a class="nav-link" href="/tip/dashboard">
+								<i class="fas fa-fw fa-user-astronaut"></i>
+						        <span>Asistente</span>
+						    </a>
+						</li>
+						
+						<!-- Divider -->
+			            <hr class="sidebar-divider">
+	
+			            <!-- Heading -->
+			            <div class="sidebar-heading">
+			                Configuración
+			            </div>
+	
+			          
+			            <!-- Nav Item - Charts -->
+			            <li class="nav-item">
+			                <a class="nav-link" href="/user/profile">
+								<i class="fas fa-fw fa-cogs"></i>
+			                <span>Perfil</span></a>
+			            </li>
+
+			        
+			            <!-- Divider -->
+			            <hr class="sidebar-divider d-none d-md-block">
+
+			            <!-- Sidebar Toggler (Sidebar) -->
+			            <div class="text-center d-none d-md-inline">
+			                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+			            </div>
+						
+						
+
+			        </ul>
+			        <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column w-100">
+        <div id="content">
+			<div th:replace="components/header :: header"></div>
+			<!-- Formulario para editar cuenta -->
+			<div class="container-fluid mt-4">
+			    <h1 class="h3 mb-4 text-gray-800">Cartera</h1>
+
+				<div class="row justify-content-center mb-4" th:if="${cuenta != null}">
+				    <div class="col-lg-6">
+				        <!-- Saldo -->
+				        <div class="card shadow border-left-success mb-4">
+				            <div class="card-body">
+				                <div class="row no-gutters align-items-center">
+				                    <div class="col mr-2 text-center">
+				                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+				                            Saldo Actual
+				                        </div>
+				                        <div class="h2 mb-0 font-weight-bold text-gray-800">
+				                            $<span th:text="${cuenta.ingreso}">0</span>
+				                        </div>
+				                    </div>
+				                    <div class="col-auto">
+				                        <i class="fas fa-wallet fa-2x text-gray-300"></i>
+				                    </div>
+				                </div>
+				            </div>
+				        </div>
+
+				        <!-- Formulario debajo del saldo -->
+				        <div class="card shadow">
+				            <div class="card-body p-4">
+				                <h6 class="mb-3 font-weight-bold text-primary">Editar Información de la Cuenta</h6>
+
+				                <form th:action="@{/cuenta/actualizar}" th:object="${cuenta}" method="post" class="user">
+				                    <input type="hidden" th:field="*{id}" />
+
+				                    <div class="form-group">
+				                        <input type="text" id="nombre" th:field="*{nombre}" class="form-control form-control-user" placeholder="Entidad de la Cuenta" required>
+				                    </div>
+
+				                    <div class="form-group">
+				                        <textarea id="descripcion" th:field="*{descripcion}" class="form-control form-control-user" rows="2" placeholder="Descripción"></textarea>
+				                    </div>
+
+				                    <button type="submit" class="btn btn-primary btn-user btn-block">Guardar Cambios</button>
+				                    <a href="/dashboard" class="btn btn-secondary btn-user btn-block">Cancelar</a>
+				                </form>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+				
+				<div th:if="${cuenta == null}" class="row justify-content-center align-items-center">
+					    
+					    <!--  Icono + descripción -->
+					    <div class="col-lg-6 mb-4 text-center">
+					        <div>
+					            <i class="fas fa-wallet fa-7x mb-4 text-primary"></i>
+					            <h2 class="text-gray-800 font-weight-bold">Bienvenido a Finanzas Hormigas</h2>
+					            <p class="lead text-gray-600">
+					                Administra tus ingresos, registra tus gastos y obtén consejos inteligentes para optimizar tu dinero.
+					                ¡Crea tu cuenta y empieza a tomar el control de tus finanzas!
+					            </p>
+					        </div>
+					    </div>
+	
+					    <!--  Formulario -->
+					    <div class="col-lg-6 mb-4">
+					        <div class="card shadow">
+					            <div class="card-body">
+					                <h4 class="mb-3 text-primary font-weight-bold">Crear una cuenta</h4>
+					                <form action="/cuenta/registrar" method="post" class="user">
+					                    <div class="form-group">
+					                        <label for="nombre">Entidad de la cuenta</label>
+					                        <input type="text" class="form-control form-control-user" id="nombre" name="nombre" required>
+					                    </div>
+					                    <div class="form-group">
+					                        <label for="descripcion">Descripción</label>
+					                        <input type="text" class="form-control form-control-user" id="descripcion" name="descripcion" required>
+					                    </div>
+					                    <div class="form-group">
+					                        <label for="ingreso">Saldo inicial</label>
+					                        <input type="number" class="form-control form-control-user" id="ingreso" name="ingreso" required min="1" max="999999999">
+					                    </div>
+					                    <button type="submit" class="btn btn-primary btn-user btn-block">
+					                        Crear cuenta
+					                    </button>
+					                </form>
+	                        </div>
+	                    </div>
+	                </div>
+					
+				</div>
+
+			</div>
+            
+        </div>
+
+        <!-- Footer -->
+		<div th:replace="components/footer :: footer"></div> 
+		
+    </div>
+</div>
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- JS Scripts -->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/vendor/chart.js/Chart.min.js"></script>
+<script src="/js/sb-admin-2.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+	// === Validación de ingreso mensual ===
+	const ingresoInput = document.getElementById("INGRESO");
+	if (ingresoInput) {
+	    ingresoInput.addEventListener("input", function () {
+	        const valor = parseInt(this.value);
+	        const maxLength = 9;
+
+	        if (isNaN(valor) || valor <= 0 || this.value.length > maxLength) {
+	            this.setCustomValidity("El ingreso debe ser mayor a 0 y tener máximo 9 dígitos.");
+	        } else {
+	            this.setCustomValidity("");
+	        }
+
+	        // Elimina caracteres no numéricos y corta si pasa los 9 dígitos
+	        this.value = this.value.replace(/[^0-9]/g, '').slice(0, maxLength);
+	    });
+}
+
+});
+
+</script>
+
+</body>
+</html>
