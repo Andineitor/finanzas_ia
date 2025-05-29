@@ -5,7 +5,10 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.finanzas.ia.finanzas_ia.dto.CuentaDto;
 import com.finanzas.ia.finanzas_ia.entity.Cuenta;
@@ -53,18 +56,33 @@ public class CuentaController {
     public String crearCuentaDesdeFormulario(@ModelAttribute CuentaDto cuentaDTO, Principal principal, Model model) {
         try {
             cuentaService.registroParaUsuario(cuentaDTO, principal.getName());
-            return "redirect:/cuenta/dashboard";
+            return "redirect:/cuenta";
         } catch (RuntimeException e) {
             model.addAttribute("nombreUsuario", principal.getName());
             model.addAttribute("error", e.getMessage());
-            return "count";
+            return "transaccion";
         }
     }
     
     @PostMapping("/actualizar")
     public String actualizarCuenta(@ModelAttribute CuentaDto cuenta) {
         cuentaService.actualizarCuenta(cuenta);
-        return "redirect:/cuenta/dashboard";
+        return "redirect:/cuenta";
+    }
+    
+    @GetMapping
+    public String mostrarCuenta(Model model, Principal principal) {
+        model.addAttribute("nombreUsuario", principal.getName());
+
+        Optional<Cuenta> cuentaOpt = cuentaService.obtenerCuentaDelUsuario(principal.getName());
+        cuentaOpt.ifPresent(c -> {
+            model.addAttribute("cuenta", c);
+        });
+        
+        Usuario usuario = usuarioService.findByUsername(principal.getName());
+        model.addAttribute("usuario", usuario); 
+
+        return "transaccion";
     }
     
 

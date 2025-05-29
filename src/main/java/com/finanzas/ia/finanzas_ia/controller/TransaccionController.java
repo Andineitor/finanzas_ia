@@ -1,13 +1,17 @@
 package com.finanzas.ia.finanzas_ia.controller;
 
 import java.security.Principal;
+import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.finanzas.ia.finanzas_ia.entity.Transaccion;
 import com.finanzas.ia.finanzas_ia.service.TransaccionService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,14 +38,27 @@ public class TransaccionController {
             @RequestParam String descripcion,
             @RequestParam Integer cantidad,
             @RequestParam Integer categoriaId,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date fecha,
             Principal principal,
             RedirectAttributes redirectAttrs
     ) {
         try {
-            transServ.registrarGasto(principal.getName(), descripcion, cantidad, categoriaId);
+            transServ.registrarGasto(principal.getName(), descripcion, cantidad, categoriaId, fecha);
         } catch (IllegalArgumentException ex) {
             redirectAttrs.addFlashAttribute("error", ex.getMessage());
         }
+        return "redirect:/cuenta/dashboard";
+    }
+    
+    @PostMapping("/editar")
+    public String editar(@ModelAttribute Transaccion transaccion) {
+        transServ.editarTransaccion(transaccion);
+        return "redirect:/cuenta/dashboard"; // o a donde quieras
+    }
+
+    @PostMapping("/eliminar")
+    public String eliminar(@RequestParam Integer id) {
+        transServ.eliminarTransaccion(id);
         return "redirect:/cuenta/dashboard";
     }
 }

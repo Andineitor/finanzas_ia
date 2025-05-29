@@ -1,6 +1,6 @@
 package com.finanzas.ia.finanzas_ia.entity;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,7 +31,7 @@ public class Cuenta {
 	private String tipoCuenta;
 	private String descripcion;
 	private Integer ingreso;
-	private Date fecha;
+	private LocalDate fecha;
 	
 	
 	@OneToOne

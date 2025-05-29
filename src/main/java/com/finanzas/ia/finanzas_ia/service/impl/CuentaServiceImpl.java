@@ -1,5 +1,6 @@
 package com.finanzas.ia.finanzas_ia.service.impl;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class CuentaServiceImpl implements CuentaService {
         cuenta.setNombre(request.getNombre());
         cuenta.setDescripcion(request.getDescripcion());
         cuenta.setIngreso(request.getIngreso());
-        cuenta.setFecha(request.getFecha());
+        cuenta.setFecha(LocalDate.now());
         cuenta.setUsuario(usuario);
 
         return cuentaRepo.save(cuenta);
@@ -50,9 +51,6 @@ public class CuentaServiceImpl implements CuentaService {
                 .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
 		cuenta.setNombre(cuentaDto.getNombre());
 		cuenta.setDescripcion(cuentaDto.getDescripcion());
-		cuenta.setIngreso(cuentaDto.getIngreso());
-		cuenta.setFecha(cuentaDto.getFecha());
-
 		cuentaRepo.save(cuenta);
 		
 	}

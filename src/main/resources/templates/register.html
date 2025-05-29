@@ -118,7 +118,7 @@
             edadInput.addEventListener("input", function () {
                 const edad = parseInt(this.value);
                 if (edad < 12 || edad > 60) {
-                    this.setCustomValidity("Edad inválida. Debe ser entre 12 y 120 años.");
+                    this.setCustomValidity("Edad inválida. Debe ser entre 12 y 60 años.");
                 } else {
                     this.setCustomValidity("");
                 }

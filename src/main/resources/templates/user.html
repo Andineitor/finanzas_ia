@@ -73,12 +73,18 @@
 			                Cuenta
 			            </div>
 
-						<li class="nav-item ">
-						   <a class="nav-link" href="/cuenta/dashboard">
+						<li class="nav-item">
+						    <a class="nav-link" href="/cuenta">
+								<i class="fas fa-fw fa-wallet"></i>
+						        <span>Mi Cartera</span>
+						    </a>
+							<a class="nav-link" href="/cuenta/dashboard">
 						     <i class="fas fa-fw fa-table"></i>
 						     <span>Transacciones</span>
 						   </a>
-						 </li>
+						</li>
+						
+						
 			            <!-- Divider -->
 			            <hr class="sidebar-divider">
 
@@ -86,13 +92,29 @@
 			            <div class="sidebar-heading">
 			                Consejos
 			            </div>
-
 			          
 			            <!-- Nav Item - Charts -->
-			            <li class="nav-item">
-			                <a class="nav-link" href="/tip/dashboard">
-			                    <i class="fas fa-fw fa-chart-area"></i>
-			                <span>?</span></a>
+						<li class="nav-item">
+						    <a class="nav-link" href="/tip/dashboard">
+								<i class="fas fa-fw fa-user-astronaut"></i>
+						        <span>Asistente</span>
+						    </a>
+						</li>
+						
+						<!-- Divider -->
+			            <hr class="sidebar-divider">
+	
+			            <!-- Heading -->
+			            <div class="sidebar-heading">
+			                Configuración
+			            </div>
+	
+			          
+			            <!-- Nav Item - Charts -->
+			            <li class="nav-item active">
+			                <a class="nav-link" href="/user/profile">
+								<i class="fas fa-fw fa-cogs"></i>
+			                <span>Perfil</span></a>
 			            </li>
 
 			        
@@ -103,6 +125,8 @@
 			            <div class="text-center d-none d-md-inline">
 			                <button class="rounded-circle border-0" id="sidebarToggle"></button>
 			            </div>
+						
+						
 
 			        </ul>
 			        <!-- End of Sidebar -->
@@ -113,71 +137,7 @@
 			<div th:replace="components/header :: header"></div>
 			<!-- Formulario para editar cuenta -->
 			<div class="container-fluid mt-4">
-			    <h1 class="h3 mb-4 text-gray-800">Editar Información de la Cuenta</h1>
-
-				<div class="row">
-				    <!-- Tarjeta de Cuenta -->
-					
-					<!-- Mensajes de advertencia cuando NO hay cuenta -->
-					<div class="col-lg-6 mb-4" th:if="${cuenta == null}">
-					    <div style="
-					        background-color: #fff3cd; 
-					        border: 1px solid #ffeeba; 
-					        border-radius: 8px; 
-					        padding: 1rem 1.5rem; 
-					        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-					        font-weight: 600;
-					        color: #856404;
-					        margin-bottom: 1rem;">
-					        <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
-					        <span th:text="${mensaje}">No tienes una cuenta creada aún.</span>
-					    </div>
-					    <div style="
-					        background-color: #d1ecf1; 
-					        border: 1px solid #bee5eb; 
-					        border-radius: 8px; 
-					        padding: 1rem 1.5rem; 
-					        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-					        font-weight: 600;
-					        color: #0c5460;">
-					        <i class="fas fa-info-circle" style="margin-right: 8px;"></i>
-					        <span>Recuerda crear tu cuenta para empezar a registrar tus finanzas.</span>
-					    </div>
-					</div>
-
-					<!-- Formulario para editar cuenta SOLO si hay cuenta -->
-					<div class="col-lg-6 mb-4" th:if="${cuenta != null}">
-
-					    <div class="card shadow">
-					        <div class="card-body p-4">
-					            <h6 class="mb-3 font-weight-bold text-primary">Editar Información de la Cuenta</h6>
-
-					            <form th:action="@{/cuenta/actualizar}" th:object="${cuenta}" method="post" class="user">
-					                <input type="hidden" th:field="*{id}" />
-
-					                <div class="form-group">
-					                    <input type="text" id="nombre" th:field="*{nombre}" class="form-control form-control-user" placeholder="Nombre de la Cuenta" required>
-					                </div>
-
-					                <div class="form-group">
-					                    <textarea id="descripcion" th:field="*{descripcion}" class="form-control form-control-user" rows="3" placeholder="Descripción"></textarea>
-					                </div>
-
-					                <div class="form-group">
-					                    <input type="number" id="ingreso" th:field="*{ingreso}" class="form-control form-control-user" placeholder="Ingreso Mensual" required>
-					                </div>
-
-					                <div class="form-group">
-					                    <input type="date" id="fecha" th:field="*{fecha}" class="form-control form-control-user" required>
-					                </div>
-
-					                <button type="submit" class="btn btn-primary btn-user btn-block">Guardar Cambios</button>
-					                <a href="/dashboard" class="btn btn-secondary btn-user btn-block">Cancelar</a>
-					            </form>
-					        </div>
-					    </div>
-					</div>
-
+				<div class="row justify-content-center">
 				    <!-- Tarjeta de Usuario -->
 				    <div class="col-lg-6 mb-4">
 				        <div class="card shadow">
@@ -245,14 +205,12 @@
 
 								    <button type="submit" class="btn btn-primary btn-user btn-block">Guardar Cambios</button>
 								    <a href="/dashboard" class="btn btn-secondary btn-user btn-block">Cancelar</a>
-								</form>
-				            </div>
-				        </div>
-				    </div>
+									</form>
+					        </div>
+					    </div>
+					</div>
 				</div>
-
 			</div>
-            
         </div>
 
         <!-- Footer -->
@@ -305,7 +263,7 @@
             edadInput.addEventListener("input", function () {
                 const edad = parseInt(this.value);
                 if (edad < 12 || edad > 60) {
-                    this.setCustomValidity("Edad inválida. Debe ser entre 12 y 120.");
+                    this.setCustomValidity("Edad inválida. Debe ser entre 12 y 60.");
                 } else {
                     this.setCustomValidity("");
                 }
