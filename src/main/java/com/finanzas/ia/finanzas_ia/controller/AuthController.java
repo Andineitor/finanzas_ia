@@ -84,11 +84,43 @@ public class AuthController {
 	            .stream()
 	            .filter(e -> e.getValue() > 40)
 	            .sorted((a, b) -> b.getValue() - a.getValue())
-	            .toList();
+				.limit(5)
+				.toList();
 	    model.addAttribute("categoriasMayores40", categoriasMayores40);
 	    model.addAttribute("categoriasMayores40Chunks", partirLista(categoriasMayores40, 4));
 
-	    Usuario usuario = userService.findByUsername(username);
+		Map<String, String> iconoPorCategoria = new HashMap<>();
+		iconoPorCategoria.put("Alimentación", "utensils");
+		iconoPorCategoria.put("Transporte", "bus");
+		iconoPorCategoria.put("Salud", "heartbeat");
+		iconoPorCategoria.put("Educación", "book");
+		iconoPorCategoria.put("Entretenimiento", "gamepad");
+		iconoPorCategoria.put("Hogar", "home");
+		iconoPorCategoria.put("Ropa", "tshirt");
+		iconoPorCategoria.put("Viajes", "plane");
+		iconoPorCategoria.put("Tecnología", "laptop");
+		iconoPorCategoria.put("Otros", "tags");
+
+
+		Map<String, String> colorPorCategoria = Map.of(
+				"Alimentación", "text-danger",       // rojo: gasto esencial
+				"Transporte", "text-primary",        // azul: movilidad
+				"Salud", "text-success",             // verde: bienestar
+				"Educación", "text-info",            // celeste: conocimiento
+				"Entretenimiento", "text-warning",   // amarillo: ocio
+				"Hogar", "text-secondary",           // gris oscuro: estable
+				"Ropa", "text-muted",                // gris claro: neutro
+				"Viajes", "text-primary",            // azul: aventura
+				"Tecnología", "text-cyan",           // si usas Bootstrap 5, puedes personalizarlo
+				"Otros", "text-dark"                 // negro: general
+		);
+
+
+		model.addAttribute("iconoPorCategoria", iconoPorCategoria);
+		model.addAttribute("colorPorCategoria", colorPorCategoria);
+
+
+		Usuario usuario = userService.findByUsername(username);
 	    model.addAttribute("usuario", usuario);
 
 	    Integer usuarioId = usuario.getId();
@@ -136,9 +168,6 @@ public class AuthController {
 	    return "dashboard";
 	}
 
-
-	
-	
 	// MÉTODO AUXILIAR para reemplazar #lists.partition
 	private List<List<Map.Entry<String, Integer>>> partirLista(List<Map.Entry<String, Integer>> lista, int tamaño) {
 		List<List<Map.Entry<String, Integer>>> resultado = new ArrayList<>();
@@ -147,5 +176,6 @@ public class AuthController {
 		}
 		return resultado;
 	}
+
 
 }
