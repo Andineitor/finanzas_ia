@@ -17,10 +17,16 @@ import com.finanzas.ia.finanzas_ia.repository.TipRepository;
 import com.finanzas.ia.finanzas_ia.repository.TransaccionRepository;
 import com.finanzas.ia.finanzas_ia.repository.UsuarioRepository;
 import com.finanzas.ia.finanzas_ia.service.TipService;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import lombok.RequiredArgsConstructor;
-import okhttp3.*;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +38,8 @@ public class TipServiceImpl implements TipService {
     private final OkHttpClient client = new OkHttpClient();
     private final Gson gson = new Gson();
 
-    private final String ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+    private final String ENDPOINT =
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent";
 
     @Value("${gemini.api.key}")
     private String apiKey;
@@ -66,7 +73,7 @@ public class TipServiceImpl implements TipService {
             Pregunta del usuario:
             "%s"
 
-            Brinda un consejo claro, útil, aplicable y corto.
+            Actua como un experto en educacion financiera y brinda un consejo claro, útil, aplicable y corto.
         """, u.getNombre(), u.getApellido(), u.getEdad(),
              u.getSexo(), c.getIngreso(), gastosTexto, tip.getPregunta());
 
@@ -98,22 +105,42 @@ public class TipServiceImpl implements TipService {
 
         String respuestaIA;
         try (Response response = client.newCall(request).execute()) {
+
+            String responseBody = response.body() != null
+                    ? response.body().string()
+                    : "";
+
+            System.out.println("=================================");
+            System.out.println("Gemini HTTP status: " + response.code());
+            System.out.println("Gemini response: " + responseBody);
+            System.out.println("=================================");
+
             if (!response.isSuccessful()) {
-                throw new IOException("Error de Gemini: " + response);
+                throw new IOException(
+                        "Error de Gemini HTTP " +
+                                response.code() +
+                                ": " +
+                                responseBody
+                );
             }
 
-            String jsonResp = response.body().string();
-            JsonObject parsed = gson.fromJson(jsonResp, JsonObject.class);
+            JsonObject parsed = gson.fromJson(responseBody, JsonObject.class);
 
             respuestaIA = parsed
-                .getAsJsonArray("candidates")
-                .get(0).getAsJsonObject()
-                .getAsJsonObject("content")
-                .getAsJsonArray("parts")
-                .get(0).getAsJsonObject()
-                .get("text").getAsString();
+                    .getAsJsonArray("candidates")
+                    .get(0)
+                    .getAsJsonObject()
+                    .getAsJsonObject("content")
+                    .getAsJsonArray("parts")
+                    .get(0)
+                    .getAsJsonObject()
+                    .get("text")
+                    .getAsString();
 
         } catch (IOException e) {
+
+            e.printStackTrace();
+
             respuestaIA = "Hubo un problema con Gemini: " + e.getMessage();
         }
 
